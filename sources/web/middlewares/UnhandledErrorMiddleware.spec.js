@@ -7,7 +7,7 @@ var UnhandledErrorMiddleware = require('./UnhandledErrorMiddleware');
 var errors = require('../../tools/errors');
 var webErrors = require('../errors');
 var repositoriesErrors = require('../../domain/errors');
-var configuration = require('../../tools/configuration');
+var configuration = require('../../configuration');
 
 describe('The unhandled error middleware', function () {
   var application;

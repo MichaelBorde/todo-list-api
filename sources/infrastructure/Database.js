@@ -1,6 +1,6 @@
 'use strict';
 
-var configuration = require('../tools/configuration');
+var configuration = require('../configuration');
 var Bluebird = require('bluebird');
 var MongoClient = require('mongodb').MongoClient;
 var Logger = require('mongodb').Logger;

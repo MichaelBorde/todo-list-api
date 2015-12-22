@@ -4,7 +4,7 @@ var _s = require('underscore.string');
 var errors = require('../../tools/errors');
 var webErrors = require('../errors');
 var repositoriesErrors = require('../../domain/errors');
-var configuration = require('../../tools/configuration');
+var configuration = require('../../configuration');
 var log = require('../../tools/log')(__filename);
 
 function UnhandledErrorMiddleware() {

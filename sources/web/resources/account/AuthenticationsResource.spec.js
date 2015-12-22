@@ -7,7 +7,7 @@ var Bluebird = require('bluebird');
 var AuthenticationsResource = require('./AuthenticationsResource');
 var FakeResponse = require('../../../test/FakeResponse');
 var CommandBus = require('../../../tools/CommandBus');
-var configuration = require('../../../tools/configuration');
+var configuration = require('../../../configuration');
 var constants = require('../../../test/constants');
 
 describe('The authentications resource', function () {

@@ -3,7 +3,7 @@
 var jwt = require('jsonwebtoken');
 var Bluebird = require('bluebird');
 var jwtVerify = Bluebird.promisify(jwt.verify);
-var configuration = require('../../tools/configuration');
+var configuration = require('../../configuration');
 
 function TokenService() {
   var self = this;

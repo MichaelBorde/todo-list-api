@@ -1,12 +1,12 @@
 'use strict';
 
 var Bluebird = require('bluebird');
-var Database = require('../sources/infrastructure/Database');
-var Repositories = require('../sources/repositories');
-var Commands = require('../sources/commands');
-var Server = require('../sources/web/Server');
-var CommandBus = require('../sources/tools/CommandBus');
-var log = require('../sources/tools/log')(__filename);
+var Database = require('./sources/infrastructure/Database');
+var Repositories = require('./sources/repositories/index');
+var Commands = require('./sources/commands/index');
+var Server = require('./sources/web/Server');
+var CommandBus = require('./sources/tools/CommandBus');
+var log = require('./sources/tools/log')(__filename);
 
 function Program() {
   var commandBus = new CommandBus();

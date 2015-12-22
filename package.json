@@ -7,7 +7,6 @@
   },
   "private": true,
   "scripts": {
-    "start": "node bin/programme",
     "test": "./node_modules/.bin/cluck"
   },
   "author": "Michael Borde",

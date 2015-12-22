@@ -2,7 +2,7 @@
 
 var log4js = require('log4js');
 var path = require('path');
-var configuration = require('./configuration');
+var configuration = require('./../configuration');
 
 log4js.configure({
   appenders: [
@@ -14,6 +14,6 @@ log4js.configure({
   levels: {'[all]': configuration.logLevel}
 });
 
-module.exports = function (nomFichier) {
-  return log4js.getLogger(path.basename(nomFichier));
+module.exports = function (fileName) {
+  return log4js.getLogger(path.basename(fileName));
 };

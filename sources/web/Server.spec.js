@@ -6,7 +6,7 @@ var Server = require('./Server');
 var CommandBus = require('../tools/CommandBus');
 var Commands = require('../commands');
 var MemoryRepository = require('../test/MemoryRepository');
-var configuration = require('../tools/configuration');
+var configuration = require('../configuration');
 var constants = require('../test/constants');
 
 describe('The server', function () {

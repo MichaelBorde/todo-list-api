@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var Router = require('./Router');
 var Middlewares = require('./middlewares');
-var configuration = require('../tools/configuration');
+var configuration = require('../configuration');
 var log = require('../tools/log')(__filename);
 var log4js = require('log4js');
 

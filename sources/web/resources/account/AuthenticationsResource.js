@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var bodyValidator = new (require('./../BodyValidator'))();
-var configuration = require('../../../tools/configuration');
+var configuration = require('../../../configuration');
 var TokenService = require('../../tools/TokenService');
 var errors = require('../../errors/index');
 
