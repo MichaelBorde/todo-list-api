@@ -1,23 +1,25 @@
 'use strict';
 
 var executeLocal = require('building').shell.executeLocal;
+var gap = require('grunt-as-promised');
 
-module.exports = function (cluck) {
+module.exports = function (grunt) {
+  gap.configure(grunt);
 
-  cluck.withTask('noLog').doing(function () {
+  grunt.registerPromiseTask('noLog', function () {
     process.env.TODO_LIST_API__LOG_LEVEL = 'OFF';
     process.env.ARPINUM_BACKEND__LOG_LEVEL = 'OFF';
   });
 
-  cluck.withTask('eslint').doing(function () {
+  grunt.registerPromiseTask('eslint', function () {
     return executeLocal('eslint', ['.']);
   });
 
-  cluck.withTask('mocha').doing(function () {
+  grunt.registerPromiseTask('mocha', function () {
     return executeLocal('mocha', ['--colors', '--reporter', 'spec', '--recursive', 'sources']);
   });
 
-  cluck.withTask('live').doing(function () {
+  grunt.registerPromiseTask('live', function () {
     return executeLocal(
       'forever', [
         '-m', '5',
@@ -26,11 +28,11 @@ module.exports = function (cluck) {
         'server.js']);
   });
 
-  cluck.withTask('testWatch').doing(function () {
+  grunt.registerPromiseTask('testWatch', function () {
     return executeLocal('watch', ['npm test', 'sources']);
   });
 
-  cluck.withTask('test').doing('noLog', 'mocha');
-  cluck.withTask('tdd').doing('noLog', 'testWatch');
-  cluck.withTask('default').doing('eslint', 'test');
+  grunt.registerTask('test', ['noLog', 'mocha']);
+  grunt.registerTask('tdd', ['noLog', 'testWatch']);
+  grunt.registerTask('default', ['eslint', 'test']);
 };
