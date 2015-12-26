@@ -1,7 +1,7 @@
 'use strict';
 
 var Bluebird = require('bluebird');
-var CommandBus = require('@arpinum/toolbox').CommandBus;
+var CommandBus = require('@arpinum/backend').CommandBus;
 var Database = require('./sources/infrastructure/Database');
 var Repositories = require('./sources/repositories/index');
 var Commands = require('./sources/commands/index');
