@@ -1,24 +1,24 @@
 'use strict';
 
 var _ = require('lodash');
-var bodyValidator = new (require('./../BodyValidator'))();
+var UnauthorizedError = require('@arpinum/backend').UnauthorizedError;
+var BodyValidator = require('@arpinum/backend').BodyValidator;
 var configuration = require('../../../configuration');
 var TokenService = require('../../tools/TokenService');
-var errors = require('../../errors/index');
 
 function AuthenticationsResource(commandBus) {
   var self = this;
   self.post = post;
 
   function post(request, response) {
-    return bodyValidator.promiseIfBodyIsValid({
+    return new BodyValidator().promiseIfBodyIsValid({
       schema: authenticationSchema(),
       request: request,
       response: response,
       errorMessage: 'Invalid authentication',
       promise: validPost
     }).catch(function (error) {
-      throw new errors.UnauthorizedError(error.message);
+      throw new UnauthorizedError(error.message);
     });
 
     function validPost(request, response) {

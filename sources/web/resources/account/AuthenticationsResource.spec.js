@@ -1,12 +1,12 @@
 'use strict';
 
-require('chai').use(require('chai-as-promised')).should();
+require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).should();
 var sinon = require('sinon');
 var _ = require('lodash');
 var Bluebird = require('bluebird');
+var CommandBus = require('@arpinum/backend').CommandBus;
+var FakeResponse = require('@arpinum/backend').FakeResponse;
 var AuthenticationsResource = require('./AuthenticationsResource');
-var FakeResponse = require('../../../test/FakeResponse');
-var CommandBus = require('../../../tools/CommandBus');
 var configuration = require('../../../configuration');
 var constants = require('../../../test/constants');
 

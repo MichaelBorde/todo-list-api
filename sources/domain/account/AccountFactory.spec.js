@@ -2,8 +2,8 @@
 
 var should = require('chai').should();
 var Bluebird = require('bluebird');
+var MemoryRepository = require('@arpinum/backend').MemoryRepository;
 var AccountFactory = require('./AccountFactory');
-var MemoryRepository = require('../../test/MemoryRepository');
 var constants = require('../../test/constants');
 
 describe('The account factory', function () {

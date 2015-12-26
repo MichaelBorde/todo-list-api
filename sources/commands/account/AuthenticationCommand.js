@@ -1,9 +1,9 @@
 'use strict';
 
 var util = require('util');
-var BaseCommand = require('../BaseCommand');
-var errors = require('../../tools/errors/index');
+var FunctionalError = require('@arpinum/backend').FunctionalError;
 var AuthenticationValidator = require('../../domain/account/AuthenticationValidator');
+var BaseCommand = require('@arpinum/backend').BaseCommand;
 
 function AuthenticationCommand(repositories, commandBus) {
   BaseCommand.call(this, repositories, commandBus);
@@ -13,7 +13,7 @@ function AuthenticationCommand(repositories, commandBus) {
   function run(authentication) {
     return new AuthenticationValidator(repositories).validate(authentication).then(function (validation) {
       if (!validation.valid) {
-        throw new errors.FunctionalError('Authentication failed');
+        throw new FunctionalError('Authentication failed');
       }
       return {email: authentication.email};
     });

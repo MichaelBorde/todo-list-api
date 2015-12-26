@@ -1,6 +1,6 @@
 'use strict';
 
-var bodyValidator = new (require('./../BodyValidator'))();
+var BodyValidator = require('@arpinum/backend').BodyValidator;
 
 function TasksResource(commandBus) {
   var self = this;
@@ -15,7 +15,7 @@ function TasksResource(commandBus) {
   }
 
   function post(request, response) {
-    return bodyValidator.promiseIfBodyIsValid({
+    return new BodyValidator().promiseIfBodyIsValid({
       schema: taskSchema(),
       request: request,
       response: response,

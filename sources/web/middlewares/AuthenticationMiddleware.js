@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var Bluebird = require('bluebird');
-var errors = require('../errors');
+var UnauthorizedError = require('@arpinum/backend').UnauthorizedError;
 var TokenService = require('../tools/TokenService');
 var log = require('../../tools/log')(__filename);
 
@@ -24,7 +24,7 @@ function AuthenticationMiddleware(commandBus) {
       }
     }).catch(function (error) {
       response.clearCookie('jwtToken');
-      next(new errors.UnauthorizedError(error.message));
+      next(new UnauthorizedError(error.message));
     });
 
     function getAuthentication(encodedToken) {

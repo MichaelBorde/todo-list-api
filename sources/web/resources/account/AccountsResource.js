@@ -1,13 +1,13 @@
 'use strict';
 
-var bodyValidator = new (require('./../BodyValidator'))();
+var BodyValidator = require('@arpinum/backend').BodyValidator;
 
 function AccountsResource(commandBus) {
   var self = this;
   self.post = post;
 
   function post(request, response) {
-    return bodyValidator.promiseIfBodyIsValid({
+    return new BodyValidator().promiseIfBodyIsValid({
       schema: accountSchema(),
       request: request,
       response: response,

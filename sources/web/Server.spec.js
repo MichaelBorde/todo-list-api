@@ -2,10 +2,10 @@
 
 require('chai').should();
 var rp = require('request-promise');
+var MemoryRepository = require('@arpinum/backend').MemoryRepository;
+var CommandBus = require('@arpinum/backend').CommandBus;
 var Server = require('./Server');
-var CommandBus = require('../tools/CommandBus');
 var Commands = require('../commands');
-var MemoryRepository = require('../test/MemoryRepository');
 var configuration = require('../configuration');
 var constants = require('../test/constants');
 

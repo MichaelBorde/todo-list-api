@@ -1,9 +1,9 @@
 'use strict';
 
 require('chai').should();
+var MemoryRepository = require('@arpinum/backend').MemoryRepository;
+var CommandBus = require('@arpinum/backend').CommandBus;
 var FindTaskCommand = require('./FindTaskCommand');
-var MemoryRepository = require('../../test/MemoryRepository');
-var CommandBus = require('../../tools/CommandBus');
 
 describe('The find task command', function () {
   var command;

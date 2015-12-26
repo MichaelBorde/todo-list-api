@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var errors = require('../errors');
+var UnauthorizedError = require('@arpinum/backend').UnauthorizedError;
 
 function AuthorizationMiddleware() {
   this.configure = configure;
@@ -27,7 +27,7 @@ function AuthorizationMiddleware() {
 
   function checkAuthentication(request, response, next) {
     if (!request.context.authentication) {
-      next(new errors.UnauthorizedError());
+      next(new UnauthorizedError());
     } else {
       next();
     }

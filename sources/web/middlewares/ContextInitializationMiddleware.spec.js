@@ -2,9 +2,9 @@
 
 var should = require('chai').should();
 var _ = require('lodash');
-var FakeApplication = require('../../test/FakeApplication');
+var CommandBus = require('@arpinum/backend').CommandBus;
+var FakeApplication = require('@arpinum/backend').FakeApplication;
 var ContextInitializationMiddleware = require('./ContextInitializationMiddleware');
-var CommandBus = require('../../tools/CommandBus');
 
 describe('The context initialization middleware', function () {
   var application;

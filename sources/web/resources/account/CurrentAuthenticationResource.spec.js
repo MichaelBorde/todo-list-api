@@ -1,8 +1,8 @@
 'use strict';
 
-require('chai').use(require('chai-as-promised')).should();
+require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).should();
+var FakeResponse = require('@arpinum/backend').FakeResponse;
 var CurrentAuthenticationResource = require('./CurrentAuthenticationResource');
-var FakeResponse = require('../../../test/FakeResponse');
 var constants = require('../../../test/constants');
 
 describe('The authentication resource', function () {

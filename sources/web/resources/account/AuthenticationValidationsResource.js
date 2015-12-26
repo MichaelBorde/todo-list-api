@@ -1,14 +1,14 @@
 'use strict';
 
 var _ = require('lodash');
-var bodyValidator = new (require('./../BodyValidator'))();
+var BodyValidator = require('@arpinum/backend').BodyValidator;
 
 function AuthenticationValidationsResource(commandBus) {
   var self = this;
   self.post = post;
 
   function post(request, response) {
-    return bodyValidator.promiseIfBodyIsValid({
+    return new BodyValidator().promiseIfBodyIsValid({
       schema: authenticationSchema(),
       request: request,
       response: response,

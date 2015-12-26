@@ -1,11 +1,11 @@
 'use strict';
 
 require('chai').should();
+var FunctionalError = require('@arpinum/backend').FunctionalError;
+var MemoryRepository = require('@arpinum/backend').MemoryRepository;
+var CommandBus = require('@arpinum/backend').CommandBus;
 var CommandeAuthentificationCompte = require('./AuthenticationCommand');
-var MemoryRepository = require('../../test/MemoryRepository');
-var CommandBus = require('../../tools/CommandBus');
 var constants = require('../../test/constants');
-var FunctionalError = require('../../tools/errors/FunctionalError');
 
 describe('The authentication command', function () {
   var command;

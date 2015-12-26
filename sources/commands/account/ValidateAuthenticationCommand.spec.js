@@ -1,9 +1,9 @@
 'use strict';
 
-require('chai').use(require('chai-as-promised')).should();
+require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).should();
+var MemoryRepository = require('@arpinum/backend').MemoryRepository;
+var CommandBus = require('@arpinum/backend').CommandBus;
 var ValidateAuthenticationCommand = require('./ValidateAuthenticationCommand');
-var MemoryRepository = require('../../test/MemoryRepository');
-var CommandBus = require('../../tools/CommandBus');
 var constants = require('../../test/constants');
 
 describe('The validate authentication command', function () {

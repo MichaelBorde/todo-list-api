@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var FakeApplication = require('../../test/FakeApplication');
+var FakeApplication = require('@arpinum/backend').FakeApplication;
 var AuthorizationMiddleware = require('./AuthorizationMiddleware');
 var constants = require('../../test/constants');
 

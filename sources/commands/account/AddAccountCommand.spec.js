@@ -1,11 +1,11 @@
 'use strict';
 
-require('chai').use(require('chai-as-promised')).should();
+require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).should();
+var ConflictingEntityError = require('@arpinum/backend').ConflictingEntityError;
+var CommandBus = require('@arpinum/backend').CommandBus;
+var MemoryRepository = require('@arpinum/backend').MemoryRepository;
 var AddAccountCommand = require('./AddAccountCommand');
-var MemoryRepository = require('../../test/MemoryRepository');
-var CommandBus = require('../../tools/CommandBus');
 var constants = require('../../test/constants');
-var errors = require('../../domain/errors');
 
 describe('The add account command', function () {
   var command;
@@ -36,7 +36,7 @@ describe('The add account command', function () {
     var existingAccount = createAccount();
     repositories.account.with(existingAccount);
 
-    return command.run(existingAccount).should.be.rejectedWith(errors.ConflictingEntityError);
+    return command.run(existingAccount).should.be.rejectedWith(ConflictingEntityError);
   });
 
   function createAccount() {

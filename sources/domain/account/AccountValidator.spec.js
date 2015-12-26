@@ -1,6 +1,6 @@
 'use strict';
 
-var MemoryRepository = require('../../test/MemoryRepository');
+var MemoryRepository = require('@arpinum/backend').MemoryRepository;
 var AccountValidator = require('./AccountValidator');
 
 describe('The account validator', function () {

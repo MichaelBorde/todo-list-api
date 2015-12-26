@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var BaseCommand = require('./../BaseCommand');
+var BaseCommand = require('@arpinum/backend').BaseCommand;
 
 function AddTaskCommand(repositories, commandBus) {
   BaseCommand.call(this, repositories, commandBus);

@@ -3,10 +3,10 @@
 var should = require('chai').should();
 var Bluebird = require('bluebird');
 var _ = require('lodash');
-var FakeApplication = require('../../test/FakeApplication');
+var CommandBus = require('@arpinum/backend').CommandBus;
+var FakeApplication = require('@arpinum/backend').FakeApplication;
 var UserMiddleware = require('./UserMiddleware');
 var constants = require('../../test/constants');
-var CommandBus = require('../../tools/CommandBus');
 
 describe('The user middleware', function () {
   var application;

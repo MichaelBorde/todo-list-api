@@ -1,13 +1,13 @@
 'use strict';
 
-var should = require('chai').should();
+var should = require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).should();
 var Bluebird = require('bluebird');
 var _ = require('lodash');
-var FakeApplication = require('../../test/FakeApplication');
+var CommandBus = require('@arpinum/backend').CommandBus;
+var FakeApplication = require('@arpinum/backend').FakeApplication;
+var FakeResponse = require('@arpinum/backend').FakeResponse;
 var AuthenticationMiddleware = require('./AuthenticationMiddleware');
 var constants = require('../../test/constants');
-var CommandBus = require('../../tools/CommandBus');
-var FakeResponse = require('../../test/FakeResponse');
 
 describe('The authentication middleware', function () {
   var application;

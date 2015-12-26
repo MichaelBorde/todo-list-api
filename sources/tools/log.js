@@ -1,19 +1,8 @@
 'use strict';
 
-var log4js = require('log4js');
-var path = require('path');
 var configuration = require('./../configuration');
+var LoggerFactory = require('@arpinum/backend').LoggerFactory;
 
-log4js.configure({
-  appenders: [
-    {
-      type: 'console',
-      layout: {type: 'pattern', pattern: '%[[%d][%p][%c]%] %m'}
-    }
-  ],
-  levels: {'[all]': configuration.logLevel}
-});
+var factory = new LoggerFactory({level: configuration.logLevel});
 
-module.exports = function (fileName) {
-  return log4js.getLogger(path.basename(fileName));
-};
+module.exports = factory.create;
