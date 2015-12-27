@@ -25,7 +25,7 @@ describe('The server', function () {
     repositories.user.with({email: constants.EMAIL});
 
     Server.__set__({
-      Database: function Database() {
+      MongoDatabase: function MongoDatabase() {
         this.initialize = _.noop;
       },
       Repositories: function Repositories() {

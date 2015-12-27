@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var UnhandledErrorMiddleware = require('@arpinum/backend').UnhandledErrorMiddleware;
 var CommandBus = require('@arpinum/backend').CommandBus;
+var MongoDatabase = require('@arpinum/backend').MongoDatabase;
 var Router = require('./Router');
 var configuration = require('../configuration');
 var log = require('../tools/log')(__filename);
@@ -15,7 +16,6 @@ var ContextInitializationMiddleware = require('./middlewares/ContextInitializati
 var AuthenticationMiddleware = require('./middlewares/AuthenticationMiddleware');
 var UserMiddleware = require('./middlewares/UserMiddleware');
 var AuthorizationMiddleware = require('./middlewares/AuthorizationMiddleware');
-var Database = require('../infrastructure/Database');
 var Repositories = require('../repositories');
 var Commands = require('../commands');
 
@@ -49,7 +49,11 @@ function Server() {
   }
 
   function initialize() {
-    var database = new Database();
+    var database = new MongoDatabase({
+      log: log,
+      databaseLogLevel: configuration.databaseLogLevel,
+      databaseUrl: configuration.databaseUrl
+    });
     var repositories = new Repositories(database);
     return Bluebird.all([
       initializeCommands(repositories),

@@ -14,7 +14,7 @@
   "repository": "https://github.com/michaelborde/todo-list-api.git",
   "dependencies": {
     "12factor-config": "^1.1.0",
-    "@arpinum/backend": "0.0.4",
+    "@arpinum/backend": "0.0.5",
     "bcrypt": "^0.8.5",
     "bluebird": "^3.1.1",
     "body-parser": "^1.14.2",
@@ -26,7 +26,6 @@
     "jsonwebtoken": "^5.4.1",
     "lodash": "^3.10.1",
     "log4js": "^0.6.29",
-    "mongodb": "^2.1.2",
     "node-uuid": "^1.4.7",
     "schema-inspector": "^1.6.3",
     "underscore.string": "^3.2.2",
