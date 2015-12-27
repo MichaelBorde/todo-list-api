@@ -13,29 +13,30 @@
   "license": "MIT",
   "repository": "https://github.com/michaelborde/todo-list-api.git",
   "dependencies": {
-    "12factor-config": "^1.0.1",
+    "12factor-config": "^1.1.0",
+    "@arpinum/backend": "0.0.4",
     "bcrypt": "^0.8.5",
-    "bluebird": "^3.0.5",
-    "body-parser": "^1.14.1",
+    "bluebird": "^3.1.1",
+    "body-parser": "^1.14.2",
     "cookie-parser": "^1.4.0",
     "cors": "^2.7.1",
     "express": "^4.13.3",
     "express-promise-router": "0.0.9",
-    "glob": "^6.0.1",
+    "glob": "^6.0.2",
     "jsonwebtoken": "^5.4.1",
     "lodash": "^3.10.1",
-    "log4js": "^0.6.28",
-    "mongodb": "^2.0.48",
+    "log4js": "^0.6.29",
+    "mongodb": "^2.1.2",
     "node-uuid": "^1.4.7",
-    "schema-inspector": "^1.5.9",
+    "schema-inspector": "^1.6.3",
     "underscore.string": "^3.2.2",
     "unorm": "^1.4.1"
   },
   "devDependencies": {
     "building": "^1.1.0",
     "chai": "^3.4.1",
-    "chai-as-promised": "^5.1.0",
-    "eslint": "^1.9.0",
+    "chai-as-promised": "^5.2.0",
+    "eslint": "^1.10.3",
     "eslint-config-arpinum": "^1.0.0",
     "forever": "^0.15.1",
     "grunt": "^0.4.5",
@@ -45,6 +46,6 @@
     "request-promise": "^1.0.2",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
-    "watch": "^0.16.0"
+    "watch": "^0.17.1"
   }
 }

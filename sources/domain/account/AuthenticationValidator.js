@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var PasswordService = require('./../../domain/account/PasswordService');
+var PasswordService = require('../../domain/account/PasswordService');
 var log = require('../../tools/log')(__filename);
 
 function AuthenticationValidator(repositories) {

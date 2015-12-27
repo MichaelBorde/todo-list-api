@@ -1,8 +1,8 @@
 'use strict';
 
-var path = require('path');
 var _ = require('lodash');
 var glob = require('glob');
+var path = require('path');
 
 function Resources(commandBus) {
   var self = this;
