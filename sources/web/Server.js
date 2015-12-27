@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var UnhandledErrorMiddleware = require('@arpinum/backend').UnhandledErrorMiddleware;
+var CommandBus = require('@arpinum/backend').CommandBus;
 var Router = require('./Router');
 var configuration = require('../configuration');
 var log = require('../tools/log')(__filename);
@@ -14,9 +15,13 @@ var ContextInitializationMiddleware = require('./middlewares/ContextInitializati
 var AuthenticationMiddleware = require('./middlewares/AuthenticationMiddleware');
 var UserMiddleware = require('./middlewares/UserMiddleware');
 var AuthorizationMiddleware = require('./middlewares/AuthorizationMiddleware');
+var Database = require('../infrastructure/Database');
+var Repositories = require('../repositories');
+var Commands = require('../commands');
 
-function Server(commandBus) {
+function Server() {
   var self = this;
+  var commandBus = new CommandBus({log: log});
   var app = express();
   var expressServer;
 
@@ -40,6 +45,24 @@ function Server(commandBus) {
   self.root = root;
 
   function start() {
+    return initialize().then(startServer);
+  }
+
+  function initialize() {
+    var database = new Database();
+    var repositories = new Repositories(database);
+    return Bluebird.all([
+      initializeCommands(repositories),
+      database.initialize()
+    ]);
+  }
+
+  function initializeCommands(repositories) {
+    var commands = new Commands(repositories, commandBus);
+    return commands.registerCommandsToBus();
+  }
+
+  function startServer() {
     return new Bluebird(function (resolve) {
       expressServer = app.listen(configuration.serverPort, function () {
         log.info('Server started at', self.root());

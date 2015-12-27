@@ -1,13 +1,13 @@
 'use strict';
 
 require('chai').should();
+var rewire = require('rewire');
+var _ = require('lodash');
 var rp = require('request-promise');
 var MemoryRepository = require('@arpinum/backend').MemoryRepository;
-var CommandBus = require('@arpinum/backend').CommandBus;
-var Server = require('./Server');
-var Commands = require('../commands');
 var configuration = require('../configuration');
 var constants = require('../test/constants');
+var Server = rewire('./Server');
 
 describe('The server', function () {
   var server;
@@ -15,6 +15,7 @@ describe('The server', function () {
 
   beforeEach(function () {
     configuration.serverPort = 9090;
+
     repositories = {
       task: new MemoryRepository(),
       account: new MemoryRepository(),
@@ -22,12 +23,16 @@ describe('The server', function () {
     };
     repositories.account.with({email: constants.EMAIL, password: constants.PASSWORD_IN_BCRYPT});
     repositories.user.with({email: constants.EMAIL});
-    var commandBus = new CommandBus();
-    var commands = new Commands(repositories, commandBus);
-    return commands.registerCommandsToBus().then(function () {
-      server = new Server(commandBus);
-      return server.start();
+
+    Server.__set__('Database', function Database() {
+      this.initialize = _.noop;
     });
+    Server.__set__('Repositories', function Repositories() {
+      _.merge(this, repositories);
+    });
+
+    server = new Server();
+    return server.start();
   });
 
   afterEach(function () {
