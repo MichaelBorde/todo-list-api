@@ -24,11 +24,13 @@ describe('The server', function () {
     repositories.account.with({email: constants.EMAIL, password: constants.PASSWORD_IN_BCRYPT});
     repositories.user.with({email: constants.EMAIL});
 
-    Server.__set__('Database', function Database() {
-      this.initialize = _.noop;
-    });
-    Server.__set__('Repositories', function Repositories() {
-      _.merge(this, repositories);
+    Server.__set__({
+      Database: function Database() {
+        this.initialize = _.noop;
+      },
+      Repositories: function Repositories() {
+        _.merge(this, repositories);
+      }
     });
 
     server = new Server();
