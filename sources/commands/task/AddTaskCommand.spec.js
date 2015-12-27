@@ -18,11 +18,13 @@ describe('The add task command', function () {
   });
 
   it('should add a new task then return the id', function () {
-    var task = {title: 'the title'};
+    var newTask = {title: 'the title'};
 
-    return command.run(task).then(function (added) {
-      added.should.deep.equal({id: task.id});
-      taskRepository.tous().should.deep.equal([task]);
+    return command.run(newTask).then(function (withId) {
+      taskRepository.all().should.have.lengthOf(1);
+      var addedTask = taskRepository.all()[0];
+      addedTask.title.should.equal('the title');
+      withId.should.deep.equal({id: addedTask.id});
     });
   });
 });

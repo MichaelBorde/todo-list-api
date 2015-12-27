@@ -22,7 +22,7 @@ describe('The update task partially command', function () {
     var updatedTask = {id: '1', title: 'the new title'};
 
     return command.run(updatedTask).then(function () {
-      taskRespository.tous().should.deep.equal([{
+      taskRespository.all().should.deep.equal([{
         id: '1',
         title: 'the new title',
         otherField: 'other value'

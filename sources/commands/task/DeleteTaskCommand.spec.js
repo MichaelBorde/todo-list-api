@@ -21,7 +21,7 @@ describe('The delete task command', function () {
     taskRespository.with({id: '1', title: 'title'});
 
     return command.run('1').then(function () {
-      taskRespository.tous().should.be.empty;
+      taskRespository.all().should.be.empty;
     });
   });
 });

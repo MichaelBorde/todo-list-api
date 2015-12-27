@@ -42,7 +42,7 @@ describe('The account factory', function () {
     var count = accountToCreate();
 
     return factory.create(count).then(function () {
-      repositories.account.tous()[0].password.should.not.equal('123456');
+      repositories.account.all()[0].password.should.not.equal('123456');
     });
   });
 
@@ -50,8 +50,8 @@ describe('The account factory', function () {
     var count = accountToCreate();
 
     return factory.create(count).then(function () {
-      repositories.user.tous().should.have.lengthOf(1);
-      repositories.user.tous()[0].email.should.equal('email');
+      repositories.user.all().should.have.lengthOf(1);
+      repositories.user.all()[0].email.should.equal('email');
     });
   });
 
@@ -64,8 +64,8 @@ describe('The account factory', function () {
     var promise = factory.create(count);
 
     return promise.should.be.rejected.then(function () {
-      repositories.account.tous().should.be.empty;
-      repositories.user.tous().should.be.empty;
+      repositories.account.all().should.be.empty;
+      repositories.user.all().should.be.empty;
     });
   });
 
@@ -78,8 +78,8 @@ describe('The account factory', function () {
     var promise = factory.create(count);
 
     return promise.should.be.rejected.then(function () {
-      repositories.account.tous().should.be.empty;
-      repositories.user.tous().should.be.empty;
+      repositories.account.all().should.be.empty;
+      repositories.user.all().should.be.empty;
     });
   });
 

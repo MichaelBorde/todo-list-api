@@ -27,8 +27,8 @@ describe('The add account command', function () {
 
     return command.run(account).then(function (withAccountId) {
       withAccountId.id.should.match(constants.UUID_REGEX);
-      repositories.account.tous().should.have.lengthOf(1);
-      repositories.account.tous()[0].id.should.equal(withAccountId.id);
+      repositories.account.all().should.have.lengthOf(1);
+      repositories.account.all()[0].id.should.equal(withAccountId.id);
     });
   });
 
