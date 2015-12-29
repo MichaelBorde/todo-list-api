@@ -10,7 +10,7 @@ function UpdateTaskPartiallyCommand(repositories, commandBus) {
 
   function run(task) {
     return repositories.task
-      .updatePartially(task)
+      .update(task)
       .return();
   }
 }

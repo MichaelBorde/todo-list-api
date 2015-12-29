@@ -26,13 +26,11 @@ describe('The authentication middleware', function () {
   });
 
   beforeEach(function () {
-    commandBus.register('ValidateCurrentAuthenticationCommand', {
-      run: function (jeton) {
-        if (!_.isEqual(jeton, constants.DECODED_JWT_TOKEN)) {
-          return Bluebird.reject('Invalid token');
-        }
-        return Bluebird.resolve();
+    commandBus.register('ValidateCurrentAuthenticationCommand', function (jeton) {
+      if (!_.isEqual(jeton, constants.DECODED_JWT_TOKEN)) {
+        return Bluebird.reject('Invalid token');
       }
+      return Bluebird.resolve();
     });
   });
 

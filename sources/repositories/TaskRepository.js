@@ -3,10 +3,10 @@
 var util = require('util');
 var BaseRepository = require('@arpinum/backend').BaseRepository;
 
-function InvitationRepository(database) {
+function TaskRepository(database) {
   BaseRepository.call(this, database, 'tasks');
 }
 
-util.inherits(InvitationRepository, BaseRepository);
+util.inherits(TaskRepository, BaseRepository);
 
-module.exports = InvitationRepository;
+module.exports = TaskRepository;

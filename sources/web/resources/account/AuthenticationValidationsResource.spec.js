@@ -23,13 +23,11 @@ describe('The authentication validation resource', function () {
         email: constants.EMAIL,
         password: constants.PASSWORD
       };
-      commandBus.register('ValidateAuthenticationCommand', {
-        run: function (givenAccount) {
-          if (_.isEqual(count, givenAccount)) {
-            return Bluebird.resolve({valid: true});
-          }
-          return Bluebird.resolve();
+      commandBus.register('ValidateAuthenticationCommand', function (givenAccount) {
+        if (_.isEqual(count, givenAccount)) {
+          return Bluebird.resolve({valid: true});
         }
+        return Bluebird.resolve();
       });
       var request = {
         body: count
@@ -46,10 +44,8 @@ describe('The authentication validation resource', function () {
         email: constants.EMAIL,
         password: constants.PASSWORD
       };
-      commandBus.register('ValidateAuthenticationCommand', {
-        run: function () {
-          return Bluebird.resolve({valid: false, errors: ['some error']});
-        }
+      commandBus.register('ValidateAuthenticationCommand', function () {
+        return Bluebird.resolve({valid: false, errors: ['some error']});
       });
       var request = {
         body: count
@@ -62,10 +58,8 @@ describe('The authentication validation resource', function () {
     });
 
     it('should respond with errors if authentication is incomplete', function () {
-      commandBus.register('ValidateAuthenticationCommand', {
-        run: function () {
-          return Bluebird.resolve('should not be called');
-        }
+      commandBus.register('ValidateAuthenticationCommand', function () {
+        return Bluebird.resolve('should not be called');
       });
       var response = new FakeResponse();
       var request = {body: {}};

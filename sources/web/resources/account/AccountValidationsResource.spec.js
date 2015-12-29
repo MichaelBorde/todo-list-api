@@ -23,13 +23,11 @@ describe('The validations resource', function () {
         email: constants.EMAIL,
         password: constants.PASSWORD
       };
-      commandBus.register('ValidateAccountCommand', {
-        run: function (givenAccount) {
-          if (_.isEqual(count, givenAccount)) {
-            return Bluebird.resolve({valid: true});
-          }
-          return Bluebird.resolve();
+      commandBus.register('ValidateAccountCommand', function (givenAccount) {
+        if (_.isEqual(count, givenAccount)) {
+          return Bluebird.resolve({valid: true});
         }
+        return Bluebird.resolve();
       });
       var request = {
         body: count
@@ -42,10 +40,8 @@ describe('The validations resource', function () {
     });
 
     it('should reject with erros if account is invalid', function () {
-      commandBus.register('ValidateAccountCommand', {
-        run: function () {
-          return Bluebird.resolve('should not be called');
-        }
+      commandBus.register('ValidateAccountCommand', function () {
+        return Bluebird.resolve('should not be called');
       });
       var response = new FakeResponse();
       var request = {body: {}};

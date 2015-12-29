@@ -24,13 +24,11 @@ describe('The authentications resource', function () {
   context('during POST', function () {
     it('should broadcast on the command bus and respond with a cookie', function () {
       var authentication = {email: constants.EMAIL, password: '123456', toRemember: true};
-      commandBus.register('AuthenticationCommand', {
-        run: function (auth) {
-          if (!_.isEqual(auth, authentication)) {
-            return Bluebird.reject('Wrong authentication');
-          }
-          return Bluebird.resolve({email: constants.EMAIL});
+      commandBus.register('AuthenticationCommand', function (auth) {
+        if (!_.isEqual(auth, authentication)) {
+          return Bluebird.reject('Wrong authentication');
         }
+        return Bluebird.resolve({email: constants.EMAIL});
       });
       var response = new FakeResponse();
 
@@ -50,10 +48,8 @@ describe('The authentications resource', function () {
 
     it('should respond with a session cookie if authentication must not be remembered', function () {
       var authentication = {email: constants.EMAIL, password: '123456', toRemember: false};
-      commandBus.register('AuthenticationCommand', {
-        run: function () {
-          return Bluebird.resolve({email: constants.EMAIL});
-        }
+      commandBus.register('AuthenticationCommand', function () {
+        return Bluebird.resolve({email: constants.EMAIL});
       });
       var response = new FakeResponse();
 
@@ -68,10 +64,8 @@ describe('The authentications resource', function () {
     });
 
     it('should respond with errors if authentication is incomplete', function () {
-      commandBus.register('AuthenticationCommand', {
-        run: function () {
-          return Bluebird.resolve('should not be called');
-        }
+      commandBus.register('AuthenticationCommand', function () {
+        return Bluebird.resolve('should not be called');
       });
       var response = new FakeResponse();
 

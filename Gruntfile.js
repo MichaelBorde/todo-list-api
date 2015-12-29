@@ -29,7 +29,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerPromiseTask('testWatch', function () {
-    return executeLocal('watch', ['npm test', 'sources']);
+    return executeLocal('watch', ['--wait', '1', 'npm test', 'sources']);
   });
 
   grunt.registerTask('test', ['noLog', 'mocha']);
