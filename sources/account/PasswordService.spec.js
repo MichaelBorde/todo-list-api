@@ -2,7 +2,7 @@
 
 require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).should();
 var PasswordService = require('./PasswordService');
-var constants = require('../../test/constants');
+var constants = require('../test/constants');
 
 describe('The password service', function () {
   var service;

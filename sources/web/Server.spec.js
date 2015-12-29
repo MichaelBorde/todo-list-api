@@ -28,8 +28,8 @@ describe('The server', function () {
       MongoDatabase: function MongoDatabase() {
         this.initialize = _.noop;
       },
-      Repositories: function Repositories() {
-        _.merge(this, repositories);
+      RepositoryInitializer: function RepositoryInitializer() {
+        this.initialize = _.constant(Promise.resolve(repositories));
       }
     });
 

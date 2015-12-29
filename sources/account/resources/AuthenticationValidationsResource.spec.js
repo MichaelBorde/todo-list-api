@@ -5,16 +5,16 @@ var _ = require('lodash');
 var Bluebird = require('bluebird');
 var CommandBus = require('@arpinum/backend').CommandBus;
 var FakeResponse = require('@arpinum/backend').FakeResponse;
-var AccountsResource = require('./AccountsResource');
-var constants = require('../../../test/constants');
+var AuthenticationValidationsResource = require('./AuthenticationValidationsResource');
+var constants = require('../../test/constants');
 
-describe('The accounts resource', function () {
+describe('The authentication validation resource', function () {
   var resource;
   var commandBus;
 
   beforeEach(function () {
     commandBus = new CommandBus();
-    resource = new AccountsResource(commandBus);
+    resource = new AuthenticationValidationsResource(commandBus);
   });
 
   context('during POST', function () {
@@ -23,9 +23,9 @@ describe('The accounts resource', function () {
         email: constants.EMAIL,
         password: constants.PASSWORD
       };
-      commandBus.register('AddAccountCommand', function (givenAccount) {
+      commandBus.register('ValidateAuthenticationCommand', function (givenAccount) {
         if (_.isEqual(count, givenAccount)) {
-          return Bluebird.resolve({id: '1337'});
+          return Bluebird.resolve({valid: true});
         }
         return Bluebird.resolve();
       });
@@ -35,12 +35,30 @@ describe('The accounts resource', function () {
       var response = new FakeResponse();
 
       return resource.post(request, response).then(function () {
-        response.send.should.have.been.calledWith({id: '1337'});
+        response.send.should.have.been.calledWith({valid: true});
       });
     });
 
-    it('should reject with errors if account is invalid', function () {
-      commandBus.register('AddAccountCommand', function () {
+    it('should hide errors from validation', function () {
+      var count = {
+        email: constants.EMAIL,
+        password: constants.PASSWORD
+      };
+      commandBus.register('ValidateAuthenticationCommand', function () {
+        return Bluebird.resolve({valid: false, errors: ['some error']});
+      });
+      var request = {
+        body: count
+      };
+      var response = new FakeResponse();
+
+      return resource.post(request, response).then(function () {
+        response.send.should.have.been.calledWith({valid: false});
+      });
+    });
+
+    it('should respond with errors if authentication is incomplete', function () {
+      commandBus.register('ValidateAuthenticationCommand', function () {
         return Bluebird.resolve('should not be called');
       });
       var response = new FakeResponse();
@@ -52,7 +70,7 @@ describe('The accounts resource', function () {
         error.should.be.defined;
         error.code.should.equal(400);
         error.message.should.equal(
-          'Invalid account: ' +
+          'Invalid authentication: ' +
           'email is mandatory, ' +
           'password is mandatory');
       });

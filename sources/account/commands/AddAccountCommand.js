@@ -3,8 +3,8 @@
 var util = require('util');
 var BaseCommand = require('@arpinum/backend').BaseCommand;
 var ConflictingEntityError = require('@arpinum/backend').ConflictingEntityError;
-var AccountFactory = require('../../domain/account/AccountFactory');
-var AccountValidator = require('../../domain/account/AccountValidator');
+var AccountFactory = require('../AccountFactory');
+var AccountValidator = require('../AccountValidator');
 
 function AddAccountCommand(repositories, commandBus) {
   BaseCommand.call(this, repositories, commandBus);

@@ -2,10 +2,8 @@
 
 var _ = require('lodash');
 var ExpressRouter = require('express-promise-router');
-var Resources = require('./resources');
 
-function Router(commandBus) {
-  var resources = new Resources(commandBus);
+function Router(resources) {
   var methods = ['post', 'get', 'put', 'delete', 'patch'];
   this.configure = configure;
 

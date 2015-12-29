@@ -8,6 +8,9 @@ var cors = require('cors');
 var UnhandledErrorMiddleware = require('@arpinum/backend').UnhandledErrorMiddleware;
 var CommandBus = require('@arpinum/backend').CommandBus;
 var MongoDatabase = require('@arpinum/backend').MongoDatabase;
+var RepositoryInitializer = require('@arpinum/backend').RepositoryInitializer;
+var CommandInitializer = require('@arpinum/backend').CommandInitializer;
+var ResourceInitializer = require('@arpinum/backend').ResourceInitializer;
 var Router = require('./Router');
 var configuration = require('../configuration');
 var log = require('../tools/log')(__filename);
@@ -16,29 +19,11 @@ var ContextInitializationMiddleware = require('./middlewares/ContextInitializati
 var AuthenticationMiddleware = require('./middlewares/AuthenticationMiddleware');
 var UserMiddleware = require('./middlewares/UserMiddleware');
 var AuthorizationMiddleware = require('./middlewares/AuthorizationMiddleware');
-var Repositories = require('../repositories');
-var Commands = require('../commands');
 
 function Server() {
   var self = this;
-  var commandBus = new CommandBus({log: log});
-  var app = express();
+  var app;
   var expressServer;
-
-  app.use(log4js.connectLogger(log, {level: 'auto'}));
-  app.use(cors({
-    origin: configuration.corsOrigin,
-    credentials: true
-  }));
-  app.use(bodyParser.json());
-  app.use(cookieParser());
-
-  new ContextInitializationMiddleware(commandBus).configure(app);
-  new AuthenticationMiddleware(commandBus).configure(app);
-  new UserMiddleware(commandBus).configure(app);
-  new AuthorizationMiddleware(commandBus).configure(app);
-  new Router(commandBus).configure(app);
-  new UnhandledErrorMiddleware({log: log, verboseWebErrors: configuration.verboseWebErrors}).configure(app);
 
   self.start = start;
   self.stop = stop;
@@ -49,21 +34,66 @@ function Server() {
   }
 
   function initialize() {
+    var commandBus = new CommandBus({log: log});
+    initializeExpress();
+
     var database = new MongoDatabase({
       log: log,
       databaseLogLevel: configuration.databaseLogLevel,
       databaseUrl: configuration.databaseUrl
     });
-    var repositories = new Repositories(database);
-    return Bluebird.all([
-      initializeCommands(repositories),
-      database.initialize()
-    ]);
+    return initializeResources(commandBus)
+      .then(function (resources) {
+        initializeRouting(commandBus, resources);
+      })
+      .then(function () {
+        return initializeRepositories(database);
+      })
+      .then(function (repositories) {
+        return initializeCommands(repositories, commandBus);
+      })
+      .then(database.initialize);
   }
 
-  function initializeCommands(repositories) {
-    var commands = new Commands(repositories, commandBus);
-    return commands.registerCommandsToBus();
+  function initializeExpress() {
+    app = express();
+    app.use(log4js.connectLogger(log, {level: 'auto'}));
+    app.use(cors({
+      origin: configuration.corsOrigin,
+      credentials: true
+    }));
+    app.use(bodyParser.json());
+    app.use(cookieParser());
+  }
+
+  function initializeResources(commandBus) {
+    return new ResourceInitializer(commandBus, {
+      log: log,
+      rootDirectory: './sources'
+    }).initialize();
+  }
+
+  function initializeRouting(commandBus, resources) {
+    new ContextInitializationMiddleware(commandBus).configure(app);
+    new AuthenticationMiddleware(commandBus).configure(app);
+    new UserMiddleware(commandBus).configure(app);
+    new AuthorizationMiddleware(commandBus).configure(app);
+    new Router(resources).configure(app);
+    new UnhandledErrorMiddleware({log: log, verboseWebErrors: configuration.verboseWebErrors}).configure(app);
+  }
+
+  function initializeRepositories(database) {
+    return new RepositoryInitializer(database, {
+      log: log,
+      rootDirectory: './sources'
+    }).initialize();
+  }
+
+  function initializeCommands(repositories, commandBus) {
+    return new CommandInitializer(repositories, commandBus, {
+      log: log,
+      rootDirectory: './sources'
+    }).initialize();
   }
 
   function startServer() {

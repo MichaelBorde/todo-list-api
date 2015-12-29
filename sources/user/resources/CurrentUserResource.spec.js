@@ -4,7 +4,7 @@ require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).shou
 var CommandBus = require('@arpinum/backend').CommandBus;
 var FakeResponse = require('@arpinum/backend').FakeResponse;
 var CurrentUserResource = require('./CurrentUserResource');
-var constants = require('../../../test/constants');
+var constants = require('../../test/constants');
 
 describe('The current user resource', function () {
   var resource;

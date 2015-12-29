@@ -3,7 +3,7 @@
 var should = require('chai').should();
 var MemoryRepository = require('@arpinum/backend').MemoryRepository;
 var AuthenticationValidator = require('./AuthenticationValidator');
-var constants = require('../../test/constants');
+var constants = require('../test/constants');
 
 describe('The authentication validator', function () {
   var validator;

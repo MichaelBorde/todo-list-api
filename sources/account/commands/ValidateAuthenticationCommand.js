@@ -2,7 +2,7 @@
 
 var util = require('util');
 var BaseCommand = require('@arpinum/backend').BaseCommand;
-var AuthenticationValidator = require('../../domain/account/AuthenticationValidator');
+var AuthenticationValidator = require('../AuthenticationValidator');
 
 function ValidateAuthenticationCommand(repositories, commandBus) {
   BaseCommand.call(this, repositories, commandBus);

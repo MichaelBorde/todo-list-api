@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var Bluebird = require('bluebird');
 var ServiceMotDePassee = require('./PasswordService');
-var log = require('../../tools/log')(__filename);
+var log = require('../tools/log')(__filename);
 
 function AccountFactory(repositories) {
   this.create = create;

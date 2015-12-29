@@ -2,7 +2,7 @@
 
 var util = require('util');
 var FunctionalError = require('@arpinum/backend').FunctionalError;
-var AuthenticationValidator = require('../../domain/account/AuthenticationValidator');
+var AuthenticationValidator = require('../AuthenticationValidator');
 var BaseCommand = require('@arpinum/backend').BaseCommand;
 
 function AuthenticationCommand(repositories, commandBus) {

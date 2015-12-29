@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var Bluebird = require('bluebird');
-var log = require('../../tools/log')(__filename);
+var log = require('../tools/log')(__filename);
 
 function AccountValidator(repositories) {
   this.validate = validate;

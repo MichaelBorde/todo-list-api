@@ -1,6 +1,6 @@
 'use strict';
 
-var log = require('../../../tools/log')(__filename);
+var log = require('../../tools/log')(__filename);
 
 function CurrentAuthenticationResource() {
   var self = this;

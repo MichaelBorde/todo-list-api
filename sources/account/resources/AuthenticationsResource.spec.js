@@ -7,8 +7,8 @@ var Bluebird = require('bluebird');
 var CommandBus = require('@arpinum/backend').CommandBus;
 var FakeResponse = require('@arpinum/backend').FakeResponse;
 var AuthenticationsResource = require('./AuthenticationsResource');
-var configuration = require('../../../configuration');
-var constants = require('../../../test/constants');
+var configuration = require('../../configuration');
+var constants = require('../../test/constants');
 
 describe('The authentications resource', function () {
   var resource;
