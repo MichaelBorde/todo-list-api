@@ -6,7 +6,7 @@ var UnauthorizedError = require('@arpinum/backend').UnauthorizedError;
 var TokenService = require('../tools/TokenService');
 var log = require('../../tools/log')(__filename);
 
-function AuthenticationMiddleware(commandBus) {
+function AuthenticationMiddleware(buses) {
   this.configure = configure;
 
   function configure(application) {
@@ -35,7 +35,7 @@ function AuthenticationMiddleware(commandBus) {
     }
 
     function validateAuthentication(decodedToken) {
-      return commandBus.broadcast('validateCurrentAuthenticationCommand', decodedToken)
+      return buses.command.broadcast('validateCurrentAuthenticationCommand', decodedToken)
         .then(function () {
           request.context.authentication = decodedToken;
           next();

@@ -1,18 +1,15 @@
 'use strict';
 
 require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).should();
-var CommandBus = require('@arpinum/backend').CommandBus;
 var FakeResponse = require('@arpinum/backend').FakeResponse;
 var CurrentUserResource = require('./CurrentUserResource');
 var constants = require('../../test/constants');
 
 describe('The current user resource', function () {
   var resource;
-  var commandBus;
 
   beforeEach(function () {
-    commandBus = new CommandBus();
-    resource = new CurrentUserResource({command: commandBus});
+    resource = new CurrentUserResource();
   });
 
   context('during GET', function () {

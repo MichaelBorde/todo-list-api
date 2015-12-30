@@ -2,7 +2,7 @@
 
 var Bluebird = require('bluebird');
 
-function UserMiddleware(commandBus) {
+function UserMiddleware(buses) {
   this.configure = configure;
 
   function configure(application) {
@@ -20,7 +20,7 @@ function UserMiddleware(commandBus) {
   }
 
   function getUser(request, next) {
-    return commandBus.broadcast('findUserCommand', {email: request.context.authentication.email})
+    return buses.query.broadcast('userQuery', {email: request.context.authentication.email})
       .then(function (user) {
         request.context.user = user;
         next();

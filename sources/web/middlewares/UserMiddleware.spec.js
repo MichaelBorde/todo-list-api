@@ -3,7 +3,7 @@
 var should = require('chai').should();
 var Bluebird = require('bluebird');
 var _ = require('lodash');
-var CommandBus = require('@arpinum/backend').CommandBus;
+var QueryBus = require('@arpinum/backend').QueryBus;
 var FakeApplication = require('@arpinum/backend').FakeApplication;
 var UserMiddleware = require('./UserMiddleware');
 var constants = require('../../test/constants');
@@ -13,19 +13,19 @@ describe('The user middleware', function () {
   var middleware;
   var nextMiddlewareCalled;
   var nextMiddlewareArgs;
-  var commandBus;
+  var queryBus;
 
   beforeEach(function () {
     application = new FakeApplication();
-    commandBus = new CommandBus();
-    middleware = new UserMiddleware(commandBus);
+    queryBus = new QueryBus();
+    middleware = new UserMiddleware({query: queryBus});
     middleware.configure(application);
     nextMiddlewareCalled = false;
     nextMiddlewareArgs = [];
   });
 
   beforeEach(function () {
-    commandBus.register('findUserCommand', function (criteria) {
+    queryBus.register('userQuery', function (criteria) {
       if (!_.isEqual(criteria, {email: constants.EMAIL})) {
         return Bluebird.reject('Entity not found');
       }

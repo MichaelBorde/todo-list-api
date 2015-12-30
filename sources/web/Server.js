@@ -37,8 +37,10 @@ function Server() {
   }
 
   function initialize() {
-    var commandBus = new CommandBus({log: log});
-    var queryBus = new QueryBus({log: log});
+    var buses = {
+      command: new CommandBus({log: log}),
+      query: new QueryBus({log: log})
+    };
     initializeExpress();
 
     var database = new MongoDatabase({
@@ -65,19 +67,15 @@ function Server() {
     }
 
     function initializeResources() {
-      var buses = {
-        command: commandBus,
-        query: queryBus
-      };
       return new ResourceInitializer(buses, moduleInitializerOptions()).initialize();
     }
 
     function initializeRouting(resources) {
       return Bluebird.try(function () {
-        new ContextInitializationMiddleware(commandBus).configure(app);
-        new AuthenticationMiddleware(commandBus).configure(app);
-        new UserMiddleware(commandBus).configure(app);
-        new AuthorizationMiddleware(commandBus).configure(app);
+        new ContextInitializationMiddleware(buses).configure(app);
+        new AuthenticationMiddleware(buses).configure(app);
+        new UserMiddleware(buses).configure(app);
+        new AuthorizationMiddleware(buses).configure(app);
         new Router(resources).configure(app);
         new UnhandledErrorMiddleware({log: log, verboseWebErrors: configuration.verboseWebErrors}).configure(app);
       });
@@ -88,12 +86,12 @@ function Server() {
     }
 
     function initializeCommands(repositories) {
-      return new CommandHandlerInitializer(repositories, commandBus, moduleInitializerOptions()).initialize();
+      return new CommandHandlerInitializer(repositories, buses.command, moduleInitializerOptions()).initialize();
     }
 
     function initializeQueries() {
       var queryProcessor = new QueryProcessor(database);
-      return new QueryHandlerInitializer(queryProcessor, queryBus, moduleInitializerOptions()).initialize();
+      return new QueryHandlerInitializer(queryProcessor, buses.query, moduleInitializerOptions()).initialize();
     }
 
     function moduleInitializerOptions() {

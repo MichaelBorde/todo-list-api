@@ -14,11 +14,10 @@ describe('The task query handler', function () {
   });
 
   it('should find a task based on criteria', function () {
-    var tasks = [
+    queryProcessor.collections.tasks = [
       {id: 1, text: 'first task'},
       {id: 2, text: 'second task'}
     ];
-    queryProcessor.collections.tasks = tasks;
 
     var promise = handler({id: 2});
 

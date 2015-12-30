@@ -19,7 +19,7 @@ describe('The authentication middleware', function () {
   beforeEach(function () {
     application = new FakeApplication();
     commandBus = new CommandBus();
-    middleware = new AuthenticationMiddleware(commandBus);
+    middleware = new AuthenticationMiddleware({command: commandBus});
     middleware.configure(application);
     nextMiddlewareCalled = false;
     nextMiddlewareArgs = [];

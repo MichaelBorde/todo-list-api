@@ -2,7 +2,6 @@
 
 var should = require('chai').should();
 var _ = require('lodash');
-var CommandBus = require('@arpinum/backend').CommandBus;
 var FakeApplication = require('@arpinum/backend').FakeApplication;
 var ContextInitializationMiddleware = require('./ContextInitializationMiddleware');
 
@@ -11,12 +10,10 @@ describe('The context initialization middleware', function () {
   var middleware;
   var nextMiddlewareCalled;
   var nextMiddlewareArgs;
-  var commandBus;
 
   beforeEach(function () {
     application = new FakeApplication();
-    commandBus = new CommandBus();
-    middleware = new ContextInitializationMiddleware(commandBus);
+    middleware = new ContextInitializationMiddleware();
     middleware.configure(application);
     nextMiddlewareCalled = false;
     nextMiddlewareArgs = [];
