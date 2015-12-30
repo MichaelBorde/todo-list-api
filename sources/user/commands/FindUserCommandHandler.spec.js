@@ -3,15 +3,15 @@
 require('chai').should();
 var MemoryRepository = require('@arpinum/backend').MemoryRepository;
 var CommandBus = require('@arpinum/backend').CommandBus;
-var FindUserCommand = require('./FindUserCommand');
+var FindUserCommandHandler = require('./FindUserCommandHandler');
 
-describe('The find user command', function () {
-  var command;
+describe('The find user command handler', function () {
+  var handler;
   var userRepository;
 
   beforeEach(function () {
     userRepository = new MemoryRepository();
-    command = new FindUserCommand(
+    handler = new FindUserCommandHandler(
       {user: userRepository},
       new CommandBus()
     );
@@ -21,7 +21,7 @@ describe('The find user command', function () {
     var users = [{id: '1', name: 'a user'}, {id: '2', name: 'another user'}];
     userRepository.withAll(users);
 
-    return command.run({id: '2'}).then(function (foundUser) {
+    return handler.run({id: '2'}).then(function (foundUser) {
       foundUser.should.deep.equal({id: '2', name: 'another user'});
     });
   });
@@ -34,7 +34,7 @@ describe('The find user command', function () {
     }];
     userRepository.withAll(users);
 
-    return command.run({id: '1'}).then(function (foundUser) {
+    return handler.run({id: '1'}).then(function (foundUser) {
       foundUser.should.deep.equal({id: '1', name: 'a user'});
     });
   });

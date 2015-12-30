@@ -1,11 +1,11 @@
 'use strict';
 
 var util = require('util');
-var BaseCommand = require('@arpinum/backend').BaseCommand;
+var BaseCommandHandler = require('@arpinum/backend').BaseCommandHandler;
 var _ = require('lodash');
 
 function FindUserCommand(repositories, commandBus) {
-  BaseCommand.call(this, repositories, commandBus);
+  BaseCommandHandler.call(this, repositories, commandBus);
 
   this.run = run;
 
@@ -17,6 +17,6 @@ function FindUserCommand(repositories, commandBus) {
   }
 }
 
-util.inherits(FindUserCommand, BaseCommand);
+util.inherits(FindUserCommand, BaseCommandHandler);
 
 module.exports = FindUserCommand;

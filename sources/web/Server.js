@@ -9,7 +9,7 @@ var UnhandledErrorMiddleware = require('@arpinum/backend').UnhandledErrorMiddlew
 var CommandBus = require('@arpinum/backend').CommandBus;
 var MongoDatabase = require('@arpinum/backend').MongoDatabase;
 var RepositoryInitializer = require('@arpinum/backend').RepositoryInitializer;
-var CommandInitializer = require('@arpinum/backend').CommandInitializer;
+var CommandHandlerInitializer = require('@arpinum/backend').CommandHandlerInitializer;
 var ResourceInitializer = require('@arpinum/backend').ResourceInitializer;
 var Router = require('./Router');
 var configuration = require('../configuration');
@@ -90,7 +90,7 @@ function Server() {
   }
 
   function initializeCommands(repositories, commandBus) {
-    return new CommandInitializer(repositories, commandBus, {
+    return new CommandHandlerInitializer(repositories, commandBus, {
       log: log,
       rootDirectory: './sources'
     }).initialize();

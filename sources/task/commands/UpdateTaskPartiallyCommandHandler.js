@@ -1,10 +1,10 @@
 'use strict';
 
 var util = require('util');
-var BaseCommand = require('@arpinum/backend').BaseCommand;
+var BaseCommandHandler = require('@arpinum/backend').BaseCommandHandler;
 
 function UpdateTaskPartiallyCommand(repositories, commandBus) {
-  BaseCommand.call(this, repositories, commandBus);
+  BaseCommandHandler.call(this, repositories, commandBus);
 
   this.run = run;
 
@@ -15,6 +15,6 @@ function UpdateTaskPartiallyCommand(repositories, commandBus) {
   }
 }
 
-util.inherits(UpdateTaskPartiallyCommand, BaseCommand);
+util.inherits(UpdateTaskPartiallyCommand, BaseCommandHandler);
 
 module.exports = UpdateTaskPartiallyCommand;

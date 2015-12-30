@@ -3,11 +3,11 @@
 var _ = require('lodash');
 var Bluebird = require('bluebird');
 var util = require('util');
-var BaseCommand = require('@arpinum/backend').BaseCommand;
+var BaseCommandHandler = require('@arpinum/backend').BaseCommandHandler;
 var FunctionalError = require('@arpinum/backend').FunctionalError;
 
 function ValidateCurrentAuthenticationCommand(repositories, commandBus) {
-  BaseCommand.call(this, repositories, commandBus);
+  BaseCommandHandler.call(this, repositories, commandBus);
 
   this.run = run;
 
@@ -25,6 +25,6 @@ function ValidateCurrentAuthenticationCommand(repositories, commandBus) {
   }
 }
 
-util.inherits(ValidateCurrentAuthenticationCommand, BaseCommand);
+util.inherits(ValidateCurrentAuthenticationCommand, BaseCommandHandler);
 
 module.exports = ValidateCurrentAuthenticationCommand;

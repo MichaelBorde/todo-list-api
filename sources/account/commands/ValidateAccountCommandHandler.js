@@ -1,11 +1,11 @@
 'use strict';
 
 var util = require('util');
-var BaseCommand = require('@arpinum/backend').BaseCommand;
+var BaseCommandHandler = require('@arpinum/backend').BaseCommandHandler;
 var AccountValidator = require('../AccountValidator');
 
 function ValidateAccountCommand(repositories, commandBus) {
-  BaseCommand.call(this, repositories, commandBus);
+  BaseCommandHandler.call(this, repositories, commandBus);
 
   this.run = run;
 
@@ -14,6 +14,6 @@ function ValidateAccountCommand(repositories, commandBus) {
   }
 }
 
-util.inherits(ValidateAccountCommand, BaseCommand);
+util.inherits(ValidateAccountCommand, BaseCommandHandler);
 
 module.exports = ValidateAccountCommand;

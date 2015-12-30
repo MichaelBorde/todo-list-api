@@ -3,15 +3,15 @@
 require('chai').should();
 var MemoryRepository = require('@arpinum/backend').MemoryRepository;
 var CommandBus = require('@arpinum/backend').CommandBus;
-var UpdateTaskPartiallyCommand = require('./UpdateTaskPartiallyCommand');
+var UpdateTaskPartiallyCommandHandler = require('./UpdateTaskPartiallyCommandHandler');
 
-describe('The update task partially command', function () {
-  var command;
+describe('The update task partially command handler', function () {
+  var handler;
   var taskRespository;
 
   beforeEach(function () {
     taskRespository = new MemoryRepository();
-    command = new UpdateTaskPartiallyCommand(
+    handler = new UpdateTaskPartiallyCommandHandler(
       {task: taskRespository},
       new CommandBus()
     );
@@ -21,7 +21,7 @@ describe('The update task partially command', function () {
     taskRespository.with({id: '1', title: 'the title', otherField: 'other value'});
     var updatedTask = {id: '1', title: 'the new title'};
 
-    return command.run(updatedTask).then(function () {
+    return handler.run(updatedTask).then(function () {
       taskRespository.all().should.deep.equal([{
         id: '1',
         title: 'the new title',

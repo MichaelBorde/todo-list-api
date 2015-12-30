@@ -1,13 +1,13 @@
 'use strict';
 
 var util = require('util');
-var BaseCommand = require('@arpinum/backend').BaseCommand;
+var BaseCommandHandler = require('@arpinum/backend').BaseCommandHandler;
 var ConflictingEntityError = require('@arpinum/backend').ConflictingEntityError;
 var AccountFactory = require('../AccountFactory');
 var AccountValidator = require('../AccountValidator');
 
 function AddAccountCommand(repositories, commandBus) {
-  BaseCommand.call(this, repositories, commandBus);
+  BaseCommandHandler.call(this, repositories, commandBus);
 
   this.run = run;
 
@@ -23,6 +23,6 @@ function AddAccountCommand(repositories, commandBus) {
   }
 }
 
-util.inherits(AddAccountCommand, BaseCommand);
+util.inherits(AddAccountCommand, BaseCommandHandler);
 
 module.exports = AddAccountCommand;

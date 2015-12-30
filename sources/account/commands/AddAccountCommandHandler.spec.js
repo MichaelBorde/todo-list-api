@@ -4,11 +4,11 @@ require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).shou
 var ConflictingEntityError = require('@arpinum/backend').ConflictingEntityError;
 var CommandBus = require('@arpinum/backend').CommandBus;
 var MemoryRepository = require('@arpinum/backend').MemoryRepository;
-var AddAccountCommand = require('./AddAccountCommand');
+var AddAccountCommandHandler = require('./AddAccountCommandHandler');
 var constants = require('../../test/constants');
 
-describe('The add account command', function () {
-  var command;
+describe('The add account command handler', function () {
+  var handler;
   var repositories;
 
   beforeEach(function () {
@@ -16,7 +16,7 @@ describe('The add account command', function () {
       account: new MemoryRepository(),
       user: new MemoryRepository()
     };
-    command = new AddAccountCommand(
+    handler = new AddAccountCommandHandler(
       repositories,
       new CommandBus()
     );
@@ -25,7 +25,7 @@ describe('The add account command', function () {
   it('should create account and return the id', function () {
     var account = createAccount();
 
-    return command.run(account).then(function (withAccountId) {
+    return handler.run(account).then(function (withAccountId) {
       withAccountId.id.should.match(constants.UUID_REGEX);
       repositories.account.all().should.have.lengthOf(1);
       repositories.account.all()[0].id.should.equal(withAccountId.id);
@@ -36,7 +36,7 @@ describe('The add account command', function () {
     var existingAccount = createAccount();
     repositories.account.with(existingAccount);
 
-    return command.run(existingAccount).should.be.rejectedWith(ConflictingEntityError);
+    return handler.run(existingAccount).should.be.rejectedWith(ConflictingEntityError);
   });
 
   function createAccount() {

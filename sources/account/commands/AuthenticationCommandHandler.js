@@ -3,10 +3,10 @@
 var util = require('util');
 var FunctionalError = require('@arpinum/backend').FunctionalError;
 var AuthenticationValidator = require('../AuthenticationValidator');
-var BaseCommand = require('@arpinum/backend').BaseCommand;
+var BaseCommandHandler = require('@arpinum/backend').BaseCommandHandler;
 
 function AuthenticationCommand(repositories, commandBus) {
-  BaseCommand.call(this, repositories, commandBus);
+  BaseCommandHandler.call(this, repositories, commandBus);
 
   this.run = run;
 
@@ -20,6 +20,6 @@ function AuthenticationCommand(repositories, commandBus) {
   }
 }
 
-util.inherits(AuthenticationCommand, BaseCommand);
+util.inherits(AuthenticationCommand, BaseCommandHandler);
 
 module.exports = AuthenticationCommand;
