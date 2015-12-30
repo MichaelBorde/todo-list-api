@@ -17,7 +17,7 @@ var ResourceInitializer = require('@arpinum/backend').ResourceInitializer;
 var Router = require('./Router');
 var configuration = require('../configuration');
 var log = require('../tools/log')(__filename);
-var log4js = require('log4js');
+var morgan = require('morgan');
 var ContextInitializationMiddleware = require('./middlewares/ContextInitializationMiddleware');
 var AuthenticationMiddleware = require('./middlewares/AuthenticationMiddleware');
 var UserMiddleware = require('./middlewares/UserMiddleware');
@@ -57,7 +57,9 @@ function Server() {
 
     function initializeExpress() {
       app = express();
-      app.use(log4js.connectLogger(log, {level: 'auto'}));
+      if (configuration.withHttpLog) {
+        app.use(morgan('combined'));
+      }
       app.use(cors({
         origin: configuration.corsOrigin,
         credentials: true

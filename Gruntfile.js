@@ -7,8 +7,15 @@ module.exports = function (grunt) {
   gap.configure(grunt);
 
   grunt.registerPromiseTask('noLog', function () {
-    process.env.TODO_LIST_API__LOG_LEVEL = 'OFF';
-    process.env.ARPINUM_BACKEND__LOG_LEVEL = 'OFF';
+    process.env.TODO_LIST_API__LOG_LEVEL = 'alert';
+    process.env.TODO_LIST_API__WITH_HTTP_LOG = 'false';
+    process.env.ARPINUM_BACKEND__LOG_LEVEL = 'alert';
+  });
+
+  grunt.registerPromiseTask('debugLog', function () {
+    process.env.TODO_LIST_API__LOG_LEVEL = 'debug';
+    process.env.TODO_LIST_API__WITH_HTTP_LOG = 'true';
+    process.env.ARPINUM_BACKEND__LOG_LEVEL = 'debug';
   });
 
   grunt.registerPromiseTask('eslint', function () {
@@ -32,6 +39,7 @@ module.exports = function (grunt) {
     return executeLocal('watch', ['--wait', '1', 'npm test', 'sources']);
   });
 
+  grunt.registerTask('debugTest', ['debugLog', 'mocha']);
   grunt.registerTask('test', ['noLog', 'mocha']);
   grunt.registerTask('tdd', ['noLog', 'testWatch']);
   grunt.registerTask('default', ['eslint', 'test']);

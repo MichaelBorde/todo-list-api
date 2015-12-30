@@ -25,11 +25,12 @@
     "glob": "^6.0.2",
     "jsonwebtoken": "^5.4.1",
     "lodash": "^3.10.1",
-    "log4js": "^0.6.29",
+    "morgan": "^1.6.1",
     "node-uuid": "^1.4.7",
     "schema-inspector": "^1.6.3",
     "underscore.string": "^3.2.2",
-    "unorm": "^1.4.1"
+    "unorm": "^1.4.1",
+    "winston": "^2.1.1"
   },
   "devDependencies": {
     "building": "^1.1.0",

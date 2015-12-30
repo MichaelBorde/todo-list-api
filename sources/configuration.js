@@ -14,6 +14,11 @@ module.exports = config({
     default: 'debug',
     values: ['error', 'info', 'debug']
   },
+  withHttpLog: {
+    env: 'TODO_LIST_API__WITH_HTTP_LOG',
+    type: 'boolean',
+    default: 'true'
+  },
   databaseLogLevel: {
     env: 'TODO_LIST_API__DB_LOG_LEVEL',
     type: 'string',
