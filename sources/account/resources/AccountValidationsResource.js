@@ -16,7 +16,7 @@ function AccountValidationsResource(commandBus) {
     });
 
     function validPost(request, response) {
-      var promise = commandBus.broadcast('ValidateAccountCommand', request.body);
+      var promise = commandBus.broadcast('validateAccountCommand', request.body);
       return promise.then(function (data) {
         response.send(data);
       });

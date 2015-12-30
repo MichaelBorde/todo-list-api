@@ -16,7 +16,7 @@ function AccountsResource(commandBus) {
     });
 
     function validPost(request, response) {
-      var promise = commandBus.broadcast('AddAccountCommand', request.body);
+      var promise = commandBus.broadcast('addAccountCommand', request.body);
       return promise.then(function (data) {
         response.send(data);
       });

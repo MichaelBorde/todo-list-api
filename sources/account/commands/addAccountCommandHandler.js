@@ -1,17 +1,11 @@
 'use strict';
 
-var util = require('util');
-var BaseCommandHandler = require('@arpinum/backend').BaseCommandHandler;
 var ConflictingEntityError = require('@arpinum/backend').ConflictingEntityError;
 var AccountFactory = require('../AccountFactory');
 var AccountValidator = require('../AccountValidator');
 
-function AddAccountCommand(repositories, commandBus) {
-  BaseCommandHandler.call(this, repositories, commandBus);
-
-  this.run = run;
-
-  function run(account) {
+module.exports = function (repositories) {
+  return function (account) {
     return new AccountValidator(repositories).validate(account).then(function (validation) {
       if (!validation.valid) {
         throw new ConflictingEntityError();
@@ -20,9 +14,5 @@ function AddAccountCommand(repositories, commandBus) {
         return {id: newAccount.id};
       });
     });
-  }
-}
-
-util.inherits(AddAccountCommand, BaseCommandHandler);
-
-module.exports = AddAccountCommand;
+  };
+};

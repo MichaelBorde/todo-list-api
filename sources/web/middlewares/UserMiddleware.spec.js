@@ -25,7 +25,7 @@ describe('The user middleware', function () {
   });
 
   beforeEach(function () {
-    commandBus.register('FindUserCommand', function (criteria) {
+    commandBus.register('findUserCommand', function (criteria) {
       if (!_.isEqual(criteria, {email: constants.EMAIL})) {
         return Bluebird.reject('Entity not found');
       }

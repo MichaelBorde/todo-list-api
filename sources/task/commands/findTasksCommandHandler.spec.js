@@ -2,8 +2,7 @@
 
 require('chai').should();
 var MemoryRepository = require('@arpinum/backend').MemoryRepository;
-var CommandBus = require('@arpinum/backend').CommandBus;
-var FindTasksCommandHandler = require('./FindTasksCommandHandler');
+var findTasksCommandHandler = require('./findTasksCommandHandler');
 
 describe('The find tasks command handler', function () {
   var handler;
@@ -11,10 +10,7 @@ describe('The find tasks command handler', function () {
 
   beforeEach(function () {
     taskRespository = new MemoryRepository();
-    handler = new FindTasksCommandHandler(
-      {task: taskRespository},
-      new CommandBus()
-    );
+    handler = findTasksCommandHandler({task: taskRespository});
   });
 
   it('should find all commands', function () {
@@ -23,7 +19,7 @@ describe('The find tasks command handler', function () {
       {id: 2, title: 'another title'}];
     taskRespository.withAll(postes);
 
-    var promise = handler.run();
+    var promise = handler();
 
     return promise.then(function (tasksFound) {
       var tasksExpected = [

@@ -2,8 +2,7 @@
 
 require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).should();
 var MemoryRepository = require('@arpinum/backend').MemoryRepository;
-var CommandBus = require('@arpinum/backend').CommandBus;
-var ValidateAuthenticationCommandHandler = require('./ValidateAuthenticationCommandHandler');
+var validateauthenticationCommandHandler = require('./validateauthenticationCommandHandler');
 var constants = require('../../test/constants');
 
 describe('The validate authentication command handler', function () {
@@ -14,7 +13,7 @@ describe('The validate authentication command handler', function () {
     repositories = {
       account: new MemoryRepository()
     };
-    handler = new ValidateAuthenticationCommandHandler(repositories, new CommandBus());
+    handler = validateauthenticationCommandHandler(repositories);
   });
 
   it('should validate successfully an authentication based on existing account', function () {
@@ -22,7 +21,7 @@ describe('The validate authentication command handler', function () {
     repositories.account.with(count);
     var authentication = {email: constants.EMAIL, password: constants.PASSWORD};
 
-    return handler.run(authentication).then(function (result) {
+    return handler(authentication).then(function (result) {
       result.should.deep.equal({valid: true});
     });
   });

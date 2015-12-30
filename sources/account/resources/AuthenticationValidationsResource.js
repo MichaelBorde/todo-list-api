@@ -17,7 +17,7 @@ function AuthenticationValidationsResource(commandBus) {
     });
 
     function validPost(request, response) {
-      var promise = commandBus.broadcast('ValidateAuthenticationCommand', request.body);
+      var promise = commandBus.broadcast('validateauthenticationCommand', request.body);
       return promise.then(function (data) {
         var resultWithoutErrors = _.omit(data, 'errors');
         response.send(resultWithoutErrors);

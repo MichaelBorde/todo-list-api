@@ -35,7 +35,7 @@ function AuthenticationMiddleware(commandBus) {
     }
 
     function validateAuthentication(decodedToken) {
-      return commandBus.broadcast('ValidateCurrentAuthenticationCommand', decodedToken)
+      return commandBus.broadcast('validateCurrentAuthenticationCommand', decodedToken)
         .then(function () {
           request.context.authentication = decodedToken;
           next();

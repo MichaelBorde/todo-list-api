@@ -20,7 +20,7 @@ function UserMiddleware(commandBus) {
   }
 
   function getUser(request, next) {
-    return commandBus.broadcast('FindUserCommand', {email: request.context.authentication.email})
+    return commandBus.broadcast('findUserCommand', {email: request.context.authentication.email})
       .then(function (user) {
         request.context.user = user;
         next();

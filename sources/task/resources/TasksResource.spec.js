@@ -19,7 +19,7 @@ describe('The tasks resource', function () {
   context('during GET', function () {
     it('should broadcast on the command bus and respond with all tasks', function () {
       var tasks = [{id: '1', text: 'a task'}, {id: '2', text: 'an another task'}];
-      commandBus.register('FindTasksCommand', function () {
+      commandBus.register('findTasksCommand', function () {
         return Bluebird.resolve(tasks);
       });
       var response = new FakeResponse();
@@ -33,7 +33,7 @@ describe('The tasks resource', function () {
   context('during POST', function () {
     it('should broadcast on the command bus and resolve created data', function () {
       var task = {text: 'the text'};
-      commandBus.register('AddTaskCommand', function (givenTask) {
+      commandBus.register('addTaskCommand', function (givenTask) {
         if (_.isEqual(task, givenTask)) {
           return Bluebird.resolve({id: '1337'});
         }
@@ -50,7 +50,7 @@ describe('The tasks resource', function () {
     });
 
     it('should respond with errors if task is invalid', function () {
-      commandBus.register('AddTaskCommand', function () {
+      commandBus.register('addTaskCommand', function () {
         return Bluebird.resolve('should not be called');
       });
       var response = new FakeResponse();

@@ -23,7 +23,7 @@ describe('The accounts resource', function () {
         email: constants.EMAIL,
         password: constants.PASSWORD
       };
-      commandBus.register('AddAccountCommand', function (givenAccount) {
+      commandBus.register('addAccountCommand', function (givenAccount) {
         if (_.isEqual(count, givenAccount)) {
           return Bluebird.resolve({id: '1337'});
         }
@@ -40,7 +40,7 @@ describe('The accounts resource', function () {
     });
 
     it('should reject with errors if account is invalid', function () {
-      commandBus.register('AddAccountCommand', function () {
+      commandBus.register('addAccountCommand', function () {
         return Bluebird.resolve('should not be called');
       });
       var response = new FakeResponse();

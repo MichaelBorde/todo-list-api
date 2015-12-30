@@ -26,7 +26,7 @@ describe('The authentication middleware', function () {
   });
 
   beforeEach(function () {
-    commandBus.register('ValidateCurrentAuthenticationCommand', function (jeton) {
+    commandBus.register('validateCurrentAuthenticationCommand', function (jeton) {
       if (!_.isEqual(jeton, constants.DECODED_JWT_TOKEN)) {
         return Bluebird.reject('Invalid token');
       }

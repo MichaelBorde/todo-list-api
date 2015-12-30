@@ -3,8 +3,7 @@
 require('chai').should();
 var FunctionalError = require('@arpinum/backend').FunctionalError;
 var MemoryRepository = require('@arpinum/backend').MemoryRepository;
-var CommandBus = require('@arpinum/backend').CommandBus;
-var AuthenticationCommandHandler = require('./AuthenticationCommandHandler');
+var authenticationCommandHandler = require('./authenticationCommandHandler');
 var constants = require('../../test/constants');
 
 describe('The authentication command handler', function () {
@@ -13,16 +12,13 @@ describe('The authentication command handler', function () {
 
   beforeEach(function () {
     accountRepository = new MemoryRepository();
-    handler = new AuthenticationCommandHandler(
-      {account: accountRepository},
-      new CommandBus()
-    );
+    handler = authenticationCommandHandler({account: accountRepository});
   });
 
   it('should return the authenticated accound if email and password are valid', function () {
     accountRepository.with({email: 'michael@mail.fr', password: constants.PASSWORD_IN_BCRYPT});
 
-    var promise = handler.run({email: constants.EMAIL, password: constants.PASSWORD});
+    var promise = handler({email: constants.EMAIL, password: constants.PASSWORD});
 
     return promise.then(function (count) {
       count.should.deep.equal({email: constants.EMAIL});
@@ -30,7 +26,7 @@ describe('The authentication command handler', function () {
   });
 
   it('should reject if account is unknown', function () {
-    var promise = handler.run('unknown', constants.PASSWORD);
+    var promise = handler('unknown', constants.PASSWORD);
 
     return promise.should.be.rejectedWith(FunctionalError, 'Authentication failed');
   });

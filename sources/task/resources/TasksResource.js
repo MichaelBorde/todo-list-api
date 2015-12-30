@@ -8,7 +8,7 @@ function TasksResource(commandBus) {
   self.post = post;
 
   function get(request, response) {
-    var promise = commandBus.broadcast('FindTasksCommand');
+    var promise = commandBus.broadcast('findTasksCommand');
     return promise.then(function (tasks) {
       response.send(tasks);
     });
@@ -24,7 +24,7 @@ function TasksResource(commandBus) {
     });
 
     function validPost(request, response) {
-      var promise = commandBus.broadcast('AddTaskCommand', request.body);
+      var promise = commandBus.broadcast('addTaskCommand', request.body);
       return promise.then(function (data) {
         response.send(data);
       });
