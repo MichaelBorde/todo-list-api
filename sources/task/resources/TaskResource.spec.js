@@ -4,22 +4,25 @@ require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).shou
 var _ = require('lodash');
 var Bluebird = require('bluebird');
 var CommandBus = require('@arpinum/backend').CommandBus;
+var QueryBus = require('@arpinum/backend').QueryBus;
 var FakeResponse = require('@arpinum/backend').FakeResponse;
 var TaskResource = require('./TaskResource');
 
 describe('The task resource', function () {
   var resource;
   var commandBus;
+  var queryBus;
 
   beforeEach(function () {
     commandBus = new CommandBus();
-    resource = new TaskResource(commandBus);
+    queryBus = new QueryBus();
+    resource = new TaskResource({command: commandBus, query: queryBus});
   });
 
   context('during GET', function () {
     it('should broadcast on the command bus and send the task', function () {
       var task = {id: '1', text: 'a task'};
-      commandBus.register('findTaskCommand', function (p) {
+      queryBus.register('taskQuery', function (p) {
         return p.id === '1' ? Bluebird.resolve(task) : null;
       });
       var response = new FakeResponse();

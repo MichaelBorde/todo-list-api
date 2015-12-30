@@ -7,9 +7,12 @@ var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var UnhandledErrorMiddleware = require('@arpinum/backend').UnhandledErrorMiddleware;
 var CommandBus = require('@arpinum/backend').CommandBus;
+var QueryBus = require('@arpinum/backend').QueryBus;
 var MongoDatabase = require('@arpinum/backend').MongoDatabase;
+var QueryProcessor = require('@arpinum/backend').QueryProcessor;
 var RepositoryInitializer = require('@arpinum/backend').RepositoryInitializer;
 var CommandHandlerInitializer = require('@arpinum/backend').CommandHandlerInitializer;
+var QueryHandlerInitializer = require('@arpinum/backend').QueryHandlerInitializer;
 var ResourceInitializer = require('@arpinum/backend').ResourceInitializer;
 var Router = require('./Router');
 var configuration = require('../configuration');
@@ -35,6 +38,7 @@ function Server() {
 
   function initialize() {
     var commandBus = new CommandBus({log: log});
+    var queryBus = new QueryBus({log: log});
     initializeExpress();
 
     var database = new MongoDatabase({
@@ -42,58 +46,62 @@ function Server() {
       databaseLogLevel: configuration.databaseLogLevel,
       databaseUrl: configuration.databaseUrl
     });
-    return initializeResources(commandBus)
-      .then(function (resources) {
-        initializeRouting(commandBus, resources);
-      })
-      .then(function () {
-        return initializeRepositories(database);
-      })
-      .then(function (repositories) {
-        return initializeCommands(repositories, commandBus);
-      })
-      .then(database.initialize);
-  }
+    return database.initialize()
+      .then(initializeResources)
+      .then(initializeRouting)
+      .then(initializeRepositories)
+      .then(initializeCommands)
+      .then(initializeQueries);
 
-  function initializeExpress() {
-    app = express();
-    app.use(log4js.connectLogger(log, {level: 'auto'}));
-    app.use(cors({
-      origin: configuration.corsOrigin,
-      credentials: true
-    }));
-    app.use(bodyParser.json());
-    app.use(cookieParser());
-  }
+    function initializeExpress() {
+      app = express();
+      app.use(log4js.connectLogger(log, {level: 'auto'}));
+      app.use(cors({
+        origin: configuration.corsOrigin,
+        credentials: true
+      }));
+      app.use(bodyParser.json());
+      app.use(cookieParser());
+    }
 
-  function initializeResources(commandBus) {
-    return new ResourceInitializer(commandBus, {
-      log: log,
-      rootDirectory: './sources'
-    }).initialize();
-  }
+    function initializeResources() {
+      var buses = {
+        command: commandBus,
+        query: queryBus
+      };
+      return new ResourceInitializer(buses, moduleInitializerOptions()).initialize();
+    }
 
-  function initializeRouting(commandBus, resources) {
-    new ContextInitializationMiddleware(commandBus).configure(app);
-    new AuthenticationMiddleware(commandBus).configure(app);
-    new UserMiddleware(commandBus).configure(app);
-    new AuthorizationMiddleware(commandBus).configure(app);
-    new Router(resources).configure(app);
-    new UnhandledErrorMiddleware({log: log, verboseWebErrors: configuration.verboseWebErrors}).configure(app);
-  }
+    function initializeRouting(resources) {
+      return Bluebird.try(function () {
+        new ContextInitializationMiddleware(commandBus).configure(app);
+        new AuthenticationMiddleware(commandBus).configure(app);
+        new UserMiddleware(commandBus).configure(app);
+        new AuthorizationMiddleware(commandBus).configure(app);
+        new Router(resources).configure(app);
+        new UnhandledErrorMiddleware({log: log, verboseWebErrors: configuration.verboseWebErrors}).configure(app);
+      });
+    }
 
-  function initializeRepositories(database) {
-    return new RepositoryInitializer(database, {
-      log: log,
-      rootDirectory: './sources'
-    }).initialize();
-  }
+    function initializeRepositories() {
+      return new RepositoryInitializer(database, moduleInitializerOptions()).initialize();
+    }
 
-  function initializeCommands(repositories, commandBus) {
-    return new CommandHandlerInitializer(repositories, commandBus, {
-      log: log,
-      rootDirectory: './sources'
-    }).initialize();
+    function initializeCommands(repositories) {
+      return new CommandHandlerInitializer(repositories, commandBus, moduleInitializerOptions()).initialize();
+    }
+
+    function initializeQueries() {
+      var queryProcessor = new QueryProcessor(database);
+      return new QueryHandlerInitializer(queryProcessor, queryBus, moduleInitializerOptions()).initialize();
+    }
+
+    function moduleInitializerOptions() {
+      return {
+        log: log,
+        rootDirectory: './sources'
+      };
+    }
   }
 
   function startServer() {

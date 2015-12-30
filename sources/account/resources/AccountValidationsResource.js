@@ -2,7 +2,7 @@
 
 var BodyValidator = require('@arpinum/backend').BodyValidator;
 
-function AccountValidationsResource(commandBus) {
+function AccountValidationsResource(buses) {
   var self = this;
   self.post = post;
 
@@ -16,7 +16,7 @@ function AccountValidationsResource(commandBus) {
     });
 
     function validPost(request, response) {
-      var promise = commandBus.broadcast('validateAccountCommand', request.body);
+      var promise = buses.command.broadcast('validateAccountCommand', request.body);
       return promise.then(function (data) {
         response.send(data);
       });

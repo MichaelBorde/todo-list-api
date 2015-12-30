@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 
-function TaskResource(commandBus) {
+function TaskResource(buses) {
   var self = this;
   self.get = get;
   self.patch = patch;
@@ -10,7 +10,7 @@ function TaskResource(commandBus) {
 
   function get(request, response) {
     var task = {id: id(request)};
-    var promise = commandBus.broadcast('findTaskCommand', task);
+    var promise = buses.query.broadcast('taskQuery', task);
     return promise.then(function (taskFound) {
       response.send(taskFound);
     });
@@ -18,14 +18,14 @@ function TaskResource(commandBus) {
 
   function patch(request, response) {
     var task = _.merge({id: id(request)}, request.body);
-    var promise = commandBus.broadcast('updateTaskPartiallyCommand', task);
+    var promise = buses.command.broadcast('updateTaskPartiallyCommand', task);
     return promise.then(function () {
       response.end();
     });
   }
 
   function doDelete(request, response) {
-    var promise = commandBus.broadcast('deleteTaskCommand', id(request));
+    var promise = buses.command.broadcast('deleteTaskCommand', id(request));
     return promise.then(function () {
       response.end();
     });

@@ -2,13 +2,13 @@
 
 var BodyValidator = require('@arpinum/backend').BodyValidator;
 
-function TasksResource(commandBus) {
+function TasksResource(buses) {
   var self = this;
   self.get = get;
   self.post = post;
 
   function get(request, response) {
-    var promise = commandBus.broadcast('findTasksCommand');
+    var promise = buses.query.broadcast('tasksQuery');
     return promise.then(function (tasks) {
       response.send(tasks);
     });
@@ -24,7 +24,7 @@ function TasksResource(commandBus) {
     });
 
     function validPost(request, response) {
-      var promise = commandBus.broadcast('addTaskCommand', request.body);
+      var promise = buses.command.broadcast('addTaskCommand', request.body);
       return promise.then(function (data) {
         response.send(data);
       });

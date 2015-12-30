@@ -6,7 +6,7 @@ var BodyValidator = require('@arpinum/backend').BodyValidator;
 var configuration = require('../../configuration');
 var TokenService = require('../../web/tools/TokenService');
 
-function AuthenticationsResource(commandBus) {
+function AuthenticationsResource(buses) {
   var self = this;
   self.post = post;
 
@@ -22,7 +22,7 @@ function AuthenticationsResource(commandBus) {
     });
 
     function validPost(request, response) {
-      var promise = commandBus.broadcast('authenticationCommand', request.body);
+      var promise = buses.command.broadcast('authenticationCommand', request.body);
       return promise.then(function (user) {
         var cookieOptions = optionsCookieDepuis(request.body);
         response.cookie('jwtToken', createJwtToken(user), cookieOptions);

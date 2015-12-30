@@ -14,7 +14,7 @@ describe('The accounts resource', function () {
 
   beforeEach(function () {
     commandBus = new CommandBus();
-    resource = new AccountsResource(commandBus);
+    resource = new AccountsResource({command: commandBus});
   });
 
   context('during POST', function () {

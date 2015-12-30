@@ -14,7 +14,7 @@ describe('The validations resource', function () {
 
   beforeEach(function () {
     commandBus = new CommandBus();
-    resource = new AccountValidationsResource(commandBus);
+    resource = new AccountValidationsResource({command: commandBus});
   });
 
   context('during POST', function () {

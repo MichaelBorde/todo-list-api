@@ -1,7 +1,6 @@
 'use strict';
 
 require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).should();
-var sinon = require('sinon');
 var _ = require('lodash');
 var Bluebird = require('bluebird');
 var CommandBus = require('@arpinum/backend').CommandBus;
@@ -13,12 +12,10 @@ var constants = require('../../test/constants');
 describe('The authentications resource', function () {
   var resource;
   var commandBus;
-  var log;
 
   beforeEach(function () {
     commandBus = new CommandBus();
-    log = {warn: sinon.stub()};
-    resource = new AuthenticationsResource(commandBus, {log: log});
+    resource = new AuthenticationsResource({command: commandBus});
   });
 
   context('during POST', function () {

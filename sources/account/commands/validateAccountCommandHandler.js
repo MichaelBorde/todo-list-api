@@ -3,7 +3,7 @@
 var AccountValidator = require('../AccountValidator');
 
 module.exports = function (repositories) {
-  return function run(account) {
+  return function (account) {
     return new AccountValidator(repositories).validate(account);
   };
 };

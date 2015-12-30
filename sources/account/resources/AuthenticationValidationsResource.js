@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var BodyValidator = require('@arpinum/backend').BodyValidator;
 
-function AuthenticationValidationsResource(commandBus) {
+function AuthenticationValidationsResource(buses) {
   var self = this;
   self.post = post;
 
@@ -17,7 +17,7 @@ function AuthenticationValidationsResource(commandBus) {
     });
 
     function validPost(request, response) {
-      var promise = commandBus.broadcast('validateauthenticationCommand', request.body);
+      var promise = buses.command.broadcast('validateauthenticationCommand', request.body);
       return promise.then(function (data) {
         var resultWithoutErrors = _.omit(data, 'errors');
         response.send(resultWithoutErrors);

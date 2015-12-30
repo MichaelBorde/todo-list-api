@@ -12,7 +12,7 @@ describe('The current user resource', function () {
 
   beforeEach(function () {
     commandBus = new CommandBus();
-    resource = new CurrentUserResource(commandBus);
+    resource = new CurrentUserResource({command: commandBus});
   });
 
   context('during GET', function () {

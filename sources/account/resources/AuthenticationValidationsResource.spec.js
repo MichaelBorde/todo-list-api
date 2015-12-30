@@ -14,7 +14,7 @@ describe('The authentication validation resource', function () {
 
   beforeEach(function () {
     commandBus = new CommandBus();
-    resource = new AuthenticationValidationsResource(commandBus);
+    resource = new AuthenticationValidationsResource({command: commandBus});
   });
 
   context('during POST', function () {

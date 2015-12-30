@@ -5,7 +5,7 @@ var Bluebird = require('bluebird');
 var FunctionalError = require('@arpinum/backend').FunctionalError;
 
 module.exports = function (repositories) {
-  return function run(authentication) {
+  return function (authentication) {
     return accounts()
       .then(function (results) {
         if (_.isEmpty(results)) {

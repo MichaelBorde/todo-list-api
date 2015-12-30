@@ -4,6 +4,7 @@ require('chai').should();
 var rewire = require('rewire');
 var _ = require('lodash');
 var rp = require('request-promise');
+var MemoryDatabase = require('@arpinum/backend').MemoryDatabase;
 var MemoryRepository = require('@arpinum/backend').MemoryRepository;
 var configuration = require('../configuration');
 var constants = require('../test/constants');
@@ -25,9 +26,7 @@ describe('The server', function () {
     repositories.user.with({email: constants.EMAIL});
 
     Server.__set__({
-      MongoDatabase: function MongoDatabase() {
-        this.initialize = _.noop;
-      },
+      MongoDatabase: MemoryDatabase,
       RepositoryInitializer: function RepositoryInitializer() {
         this.initialize = _.constant(Promise.resolve(repositories));
       }
@@ -75,10 +74,10 @@ describe('The server', function () {
     return createValidAuthentication().then(function (response) {
       var promise = rp(server.root() + '/tasks/42', {headers: {'Cookie': response.headers['set-cookie']}});
 
-      return promise.should.be.rejected.then(function (raison) {
-        raison.response.statusCode.should.equal(404);
-        var message = 'No entity for ' + JSON.stringify({id: '42'});
-        raison.response.body.should.deep.equal(JSON.stringify({'error': message}));
+      return promise.should.be.rejected.then(function (reason) {
+        reason.response.statusCode.should.equal(404);
+        var message = 'Queried object not found for ' + JSON.stringify({id: '42'});
+        reason.response.body.should.deep.equal(JSON.stringify({'error': message}));
       });
     });
   });
