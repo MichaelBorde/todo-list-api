@@ -5,31 +5,23 @@ var rewire = require('rewire');
 var _ = require('lodash');
 var rp = require('request-promise');
 var MemoryDatabase = require('@arpinum/backend').MemoryDatabase;
-var MemoryRepository = require('@arpinum/backend').MemoryRepository;
 var configuration = require('../configuration');
 var constants = require('../test/constants');
 var Server = rewire('./Server');
 
 describe('The server', function () {
   var server;
-  var repositories;
+  var database;
 
   beforeEach(function () {
     configuration.serverPort = 9090;
 
-    repositories = {
-      task: new MemoryRepository(),
-      account: new MemoryRepository(),
-      user: new MemoryRepository()
-    };
-    repositories.account.with({email: constants.EMAIL, password: constants.PASSWORD_IN_BCRYPT});
-    repositories.user.with({email: constants.EMAIL});
+    database = new MemoryDatabase();
+    database.collections.accounts = [{email: constants.EMAIL, password: constants.PASSWORD_IN_BCRYPT}];
+    database.collections.users = [{email: constants.EMAIL}];
 
     Server.__set__({
-      MongoDatabase: MemoryDatabase,
-      RepositoryInitializer: function RepositoryInitializer() {
-        this.initialize = _.constant(Promise.resolve(repositories));
-      }
+      MongoDatabase: _.constant(database)
     });
 
     server = new Server();
