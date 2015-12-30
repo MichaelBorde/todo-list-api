@@ -12,7 +12,7 @@ module.exports = function (grunt) {
     process.env.ARPINUM_BACKEND__LOG_LEVEL = 'alert';
   });
 
-  grunt.registerPromiseTask('debugLog', function () {
+  grunt.registerPromiseTask('debug', function () {
     process.env.TODO_LIST_API__LOG_LEVEL = 'debug';
     process.env.TODO_LIST_API__WITH_HTTP_LOG = 'true';
     process.env.ARPINUM_BACKEND__LOG_LEVEL = 'debug';
@@ -39,7 +39,6 @@ module.exports = function (grunt) {
     return executeLocal('watch', ['--wait', '1', 'npm test', 'sources']);
   });
 
-  grunt.registerTask('debugTest', ['debugLog', 'mocha']);
   grunt.registerTask('test', ['noLog', 'mocha']);
   grunt.registerTask('tdd', ['noLog', 'testWatch']);
   grunt.registerTask('default', ['eslint', 'test']);

@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var UnhandledErrorMiddleware = require('@arpinum/backend').UnhandledErrorMiddleware;
+var EventBus = require('@arpinum/backend').EventBus;
 var CommandBus = require('@arpinum/backend').CommandBus;
 var QueryBus = require('@arpinum/backend').QueryBus;
 var MongoDatabase = require('@arpinum/backend').MongoDatabase;
@@ -13,6 +14,7 @@ var QueryProcessor = require('@arpinum/backend').QueryProcessor;
 var RepositoryInitializer = require('@arpinum/backend').RepositoryInitializer;
 var CommandHandlerInitializer = require('@arpinum/backend').CommandHandlerInitializer;
 var QueryHandlerInitializer = require('@arpinum/backend').QueryHandlerInitializer;
+var EventHandlerInitializer = require('@arpinum/backend').EventHandlerInitializer;
 var ResourceInitializer = require('@arpinum/backend').ResourceInitializer;
 var Router = require('./Router');
 var configuration = require('../configuration');
@@ -38,20 +40,21 @@ function Server() {
 
   function initialize() {
     var buses = {
+      event: new EventBus({log: log}),
       command: new CommandBus({log: log}),
       query: new QueryBus({log: log})
     };
     initializeExpress();
 
-    var database = new MongoDatabase({
-      log: log,
-      databaseLogLevel: configuration.databaseLogLevel,
-      databaseUrl: configuration.databaseUrl
-    });
-    return database.initialize()
+    var database;
+    var resources;
+    var repositories;
+
+    return initializeDatabase()
       .then(initializeResources)
       .then(initializeRouting)
       .then(initializeRepositories)
+      .then(initializeEvents)
       .then(initializeCommands)
       .then(initializeQueries);
 
@@ -68,11 +71,25 @@ function Server() {
       app.use(cookieParser());
     }
 
-    function initializeResources() {
-      return new ResourceInitializer(buses, moduleInitializerOptions()).initialize();
+    function initializeDatabase() {
+      return Bluebird.try(function () {
+        database = new MongoDatabase({
+          log: log,
+          databaseLogLevel: configuration.databaseLogLevel,
+          databaseUrl: configuration.databaseUrl
+        });
+        return database.initialize();
+      });
     }
 
-    function initializeRouting(resources) {
+    function initializeResources() {
+      var initialize = new ResourceInitializer(buses, initializerOptions()).initialize();
+      return initialize.then(function (r) {
+        resources = r;
+      });
+    }
+
+    function initializeRouting() {
       return Bluebird.try(function () {
         new ContextInitializationMiddleware(buses).configure(app);
         new AuthenticationMiddleware(buses).configure(app);
@@ -84,19 +101,26 @@ function Server() {
     }
 
     function initializeRepositories() {
-      return new RepositoryInitializer(database, moduleInitializerOptions()).initialize();
+      var initialize = new RepositoryInitializer(database, initializerOptions()).initialize();
+      return initialize.then(function (r) {
+        repositories = r;
+      });
     }
 
-    function initializeCommands(repositories) {
-      return new CommandHandlerInitializer(repositories, buses.command, moduleInitializerOptions()).initialize();
+    function initializeEvents() {
+      return new EventHandlerInitializer(repositories, buses.event, initializerOptions()).initialize();
+    }
+
+    function initializeCommands() {
+      return new CommandHandlerInitializer(repositories, buses, initializerOptions()).initialize();
     }
 
     function initializeQueries() {
       var queryProcessor = new QueryProcessor(database);
-      return new QueryHandlerInitializer(queryProcessor, buses.query, moduleInitializerOptions()).initialize();
+      return new QueryHandlerInitializer(queryProcessor, buses.query, initializerOptions()).initialize();
     }
 
-    function moduleInitializerOptions() {
+    function initializerOptions() {
       return {
         log: log,
         rootDirectory: './sources'
