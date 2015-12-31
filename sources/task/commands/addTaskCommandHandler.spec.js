@@ -16,23 +16,19 @@ describe('The add task command handler', function () {
     handler = addTaskCommandHandler({task: taskRepository}, {event: eventBus});
   });
 
-  it('should add a new task then return the id', function () {
-    var newTask = {title: 'the title'};
+  it('should add a new task', function () {
+    var newTask = {id: '1', title: 'the title'};
 
-    return handler(newTask).then(function (withId) {
-      taskRepository.all().should.have.lengthOf(1);
-      var addedTask = taskRepository.all()[0];
-      addedTask.title.should.equal('the title');
-      withId.should.deep.equal({id: addedTask.id});
+    return handler(newTask).then(function () {
+      taskRepository.all().should.deep.equal([newTask]);
     });
   });
 
-  it('should broadcast an event after the task creation', function () {
-    var newTask = {title: 'the title'};
+  it('should broadcast an event after the creation', function () {
+    var newTask = {id: '1', title: 'the title'};
 
     return handler(newTask).then(function () {
-      var addedTask = taskRepository.all()[0];
-      eventBus.broadcast.should.have.been.calledWith('taskAddedEvent', addedTask);
+      eventBus.broadcast.should.have.been.calledWith('taskAddedEvent', newTask);
     });
   });
 });

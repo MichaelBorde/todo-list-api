@@ -12,15 +12,15 @@ describe('The password service', function () {
   });
 
   it('should compare successfully two corresponding passwords', function () {
-    var count = {password: constants.PASSWORD_IN_BCRYPT};
+    var account = {password: constants.PASSWORD_IN_BCRYPT};
 
-    return service.compareWithAccount(constants.PASSWORD, count).should.eventually.be.true;
+    return service.compareWithAccount(constants.PASSWORD, account).should.eventually.be.true;
   });
 
   it('should compare with failure if passwords do not correspond', function () {
-    var count = {password: constants.PASSWORD_IN_BCRYPT};
+    var account = {password: constants.PASSWORD_IN_BCRYPT};
 
-    return service.compareWithAccount('bleh', count).should.eventually.be.false;
+    return service.compareWithAccount('bleh', account).should.eventually.be.false;
   });
 
   it('should encrypt passwords', function () {

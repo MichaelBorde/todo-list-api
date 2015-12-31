@@ -1,17 +1,18 @@
 'use strict';
 
 var ConflictingEntityError = require('@arpinum/backend').ConflictingEntityError;
-var AccountFactory = require('../AccountFactory');
 var AccountValidator = require('../AccountValidator');
+var AccountFactory = require('../AccountFactory');
 
-module.exports = function (repositories) {
-  return function (account) {
-    return new AccountValidator(repositories).validate(account).then(function (validation) {
+module.exports = function (repositories, buses) {
+  return function (command) {
+    return new AccountValidator(repositories).validate(command).then(function (validation) {
       if (!validation.valid) {
         throw new ConflictingEntityError();
       }
-      return new AccountFactory(repositories).create(account).then(function (newAccount) {
-        return {id: newAccount.id};
+
+      return new AccountFactory(repositories).create(command).then(function (createdAccount) {
+        buses.event.broadcast('accountAddedEvent', createdAccount);
       });
     });
   };

@@ -7,8 +7,8 @@ function PasswordService() {
   this.compareWithAccount = compareWithAccount;
   this.encrypt = encrypt;
 
-  function compareWithAccount(encrypt, count) {
-    return bcrypt.compareAsync(encrypt, count.password);
+  function compareWithAccount(encrypt, account) {
+    return bcrypt.compareAsync(encrypt, account.password);
   }
 
   function encrypt(plainText) {

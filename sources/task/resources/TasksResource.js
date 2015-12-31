@@ -1,6 +1,8 @@
 'use strict';
 
+var _ = require('lodash');
 var BodyValidator = require('@arpinum/backend').BodyValidator;
+var uuid = require('@arpinum/backend').uuid;
 
 function TasksResource(buses) {
   var self = this;
@@ -24,9 +26,10 @@ function TasksResource(buses) {
     });
 
     function validPost(request, response) {
-      var promise = buses.command.broadcast('addTaskCommand', request.body);
-      return promise.then(function (data) {
-        response.send(data);
+      var taskCommand = _.merge({}, request.body, {id: uuid.create()});
+      var promise = buses.command.broadcast('addTaskCommand', taskCommand);
+      return promise.then(function () {
+        response.send({id: taskCommand.id});
       });
     }
 

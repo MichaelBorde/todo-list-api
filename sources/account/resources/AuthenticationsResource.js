@@ -4,7 +4,7 @@ var _ = require('lodash');
 var UnauthorizedError = require('@arpinum/backend').UnauthorizedError;
 var BodyValidator = require('@arpinum/backend').BodyValidator;
 var configuration = require('../../configuration');
-var TokenService = require('../../web/tools/TokenService');
+var TokenService = require('@arpinum/backend').TokenService;
 
 function AuthenticationsResource(buses) {
   var self = this;
@@ -22,16 +22,23 @@ function AuthenticationsResource(buses) {
     });
 
     function validPost(request, response) {
-      var promise = buses.command.broadcast('authenticationCommand', request.body);
-      return promise.then(function (user) {
+      var promise = buses.command.broadcast('authenticateCommand', request.body);
+      return promise.then(function () {
         var cookieOptions = optionsCookieDepuis(request.body);
-        response.cookie('jwtToken', createJwtToken(user), cookieOptions);
+        response.cookie('jwtToken', createJwtToken(request.body), cookieOptions);
         response.end();
       });
     }
 
-    function createJwtToken(user) {
-      return new TokenService().create(user);
+    function createJwtToken(account) {
+      return tokenService().create(account);
+    }
+
+    function tokenService() {
+      return new TokenService({
+        expirationInMinutes: configuration.authenticationExpirationInMinutes,
+        secret: configuration.jwtSecret
+      });
     }
 
     function optionsCookieDepuis(authentication) {

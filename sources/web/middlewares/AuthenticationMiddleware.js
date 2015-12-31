@@ -3,7 +3,8 @@
 var _ = require('lodash');
 var Bluebird = require('bluebird');
 var UnauthorizedError = require('@arpinum/backend').UnauthorizedError;
-var TokenService = require('../tools/TokenService');
+var TokenService = require('@arpinum/backend').TokenService;
+var configuration = require('../../configuration');
 var log = require('../../tools/log')(__filename);
 
 function AuthenticationMiddleware(buses) {
@@ -28,10 +29,17 @@ function AuthenticationMiddleware(buses) {
     });
 
     function getAuthentication(encodedToken) {
-      return new TokenService().verify(encodedToken)
+      return tokenService().verify(encodedToken)
         .then(function (decodedToken) {
           return validateAuthentication(decodedToken);
         });
+    }
+
+    function tokenService() {
+      return new TokenService({
+        expirationInMinutes: configuration.authenticationExpirationInMinutes,
+        secret: configuration.jwtSecret
+      });
     }
 
     function validateAuthentication(decodedToken) {

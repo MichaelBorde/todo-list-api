@@ -3,10 +3,10 @@
 require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).should();
 var _ = require('lodash');
 var Bluebird = require('bluebird');
-var CommandBus = require('@arpinum/backend').CommandBus;
-var QueryBus = require('@arpinum/backend').QueryBus;
+var sinon = require('sinon');
+var rewire = require('rewire');
 var FakeResponse = require('@arpinum/backend').FakeResponse;
-var TasksResource = require('./TasksResource');
+var TasksResource = rewire('./TasksResource');
 
 describe('The tasks resource', function () {
   var resource;
@@ -14,54 +14,52 @@ describe('The tasks resource', function () {
   var queryBus;
 
   beforeEach(function () {
-    commandBus = new CommandBus();
-    queryBus = new QueryBus();
+    commandBus = {broadcast: sinon.stub().returns(Bluebird.resolve())};
+    queryBus = {broadcast: sinon.stub().returns(Bluebird.resolve())};
+
+    TasksResource.__set__({
+      uuid: {create: _.constant('1337')}
+    });
+
     resource = new TasksResource({command: commandBus, query: queryBus});
   });
 
   context('during GET', function () {
-    it('should broadcast on the command bus and respond with all tasks', function () {
+    it('should broadcast on the query bus and respond with all tasks', function () {
       var tasks = [{id: '1', text: 'a task'}, {id: '2', text: 'an another task'}];
-      queryBus.register('tasksQuery', function () {
-        return Bluebird.resolve(tasks);
-      });
+      queryBus.broadcast.withArgs('tasksQuery').returns(Bluebird.resolve(tasks));
       var response = new FakeResponse();
 
-      return resource.get({}, response).then(function () {
+      var promise = resource.get({}, response);
+
+      return promise.then(function () {
         response.send.should.have.been.calledWith(tasks);
       });
     });
   });
 
   context('during POST', function () {
-    it('should broadcast on the command bus and resolve created data', function () {
+    it('should broadcast on the command bus and resolve created id', function () {
       var task = {text: 'the text'};
-      commandBus.register('addTaskCommand', function (givenTask) {
-        if (_.isEqual(task, givenTask)) {
-          return Bluebird.resolve({id: '1337'});
-        }
-        return Bluebird.resolve();
-      });
-      var request = {
-        body: task
-      };
+      var request = {body: task};
       var response = new FakeResponse();
 
-      return resource.post(request, response).then(function () {
+      var post = resource.post(request, response);
+
+      return post.then(function () {
+        commandBus.broadcast.should.have.been.calledWith('addTaskCommand', {id: '1337', text: 'the text'});
         response.send.should.have.been.calledWith({id: '1337'});
       });
     });
 
     it('should respond with errors if task is invalid', function () {
-      commandBus.register('addTaskCommand', function () {
-        return Bluebird.resolve('should not be called');
-      });
       var response = new FakeResponse();
-      var request = {body: {}, context: {user: {}}};
+      var request = {body: {}};
 
       var promise = resource.post(request, response);
 
       return promise.should.be.rejected.then(function (error) {
+        commandBus.broadcast.should.not.have.been.called;
         error.should.be.defined;
         error.code.should.equal(400);
         error.message.should.equal(
