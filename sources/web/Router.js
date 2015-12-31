@@ -11,9 +11,7 @@ function Router(resources) {
     var router = new ExpressRouter();
     route('/users', resources.users);
     route('/users/current', resources.currentUser);
-    route('/users/validations', resources.userValidations);
     route('/authentications', resources.authentications);
-    route('/authentications/validations', resources.authenticationValidations);
     route('/authentications/current', resources.currentAuthentication);
     route('/tasks', resources.tasks);
     route('/tasks/:id', resources.task);

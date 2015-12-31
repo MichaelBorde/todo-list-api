@@ -21,8 +21,8 @@ var configuration = require('../configuration');
 var log = require('../tools/log')(__filename);
 var morgan = require('morgan');
 var ContextInitializationMiddleware = require('./middlewares/ContextInitializationMiddleware');
-var AuthenticationMiddleware = require('./middlewares/AuthenticationMiddleware');
-var UserMiddleware = require('./middlewares/UserMiddleware');
+var AuthenticationMiddleware = require('./../user/middlewares/AuthenticationMiddleware');
+var UserMiddleware = require('./../user/middlewares/UserMiddleware');
 var AuthorizationMiddleware = require('./middlewares/AuthorizationMiddleware');
 
 function Server() {

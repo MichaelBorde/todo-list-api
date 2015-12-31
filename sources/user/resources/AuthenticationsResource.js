@@ -3,8 +3,8 @@
 var _ = require('lodash');
 var UnauthorizedError = require('@arpinum/backend').UnauthorizedError;
 var BodyValidator = require('@arpinum/backend').BodyValidator;
-var configuration = require('../../configuration');
 var TokenService = require('@arpinum/backend').TokenService;
+var configuration = require('../../configuration');
 
 function AuthenticationsResource(buses) {
   var self = this;

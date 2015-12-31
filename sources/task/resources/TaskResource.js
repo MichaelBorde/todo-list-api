@@ -9,23 +9,23 @@ function TaskResource(buses) {
   self.delete = doDelete;
 
   function get(request, response) {
-    var task = {id: id(request)};
-    var promise = buses.query.broadcast('taskQuery', task);
+    var command = {id: id(request)};
+    var promise = buses.query.broadcast('taskQuery', command);
     return promise.then(function (taskFound) {
       response.send(taskFound);
     });
   }
 
   function patch(request, response) {
-    var task = _.merge({id: id(request)}, request.body);
-    var promise = buses.command.broadcast('updateTaskPartiallyCommand', task);
+    var command = _.merge({id: id(request)}, request.body);
+    var promise = buses.command.broadcast('updateTaskPartiallyCommand', command);
     return promise.then(function () {
       response.end();
     });
   }
 
   function doDelete(request, response) {
-    var promise = buses.command.broadcast('deleteTaskCommand', id(request));
+    var promise = buses.command.broadcast('deleteTaskCommand', {id: id(request)});
     return promise.then(function () {
       response.end();
     });

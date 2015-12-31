@@ -17,18 +17,18 @@ describe('The add task command handler', function () {
   });
 
   it('should add a new task', function () {
-    var newTask = {id: '1', title: 'the title'};
+    var command = {id: '1', title: 'the title'};
 
-    return handler(newTask).then(function () {
-      taskRepository.all().should.deep.equal([newTask]);
+    return handler(command).then(function () {
+      taskRepository.all().should.deep.equal([command]);
     });
   });
 
   it('should broadcast an event after the creation', function () {
-    var newTask = {id: '1', title: 'the title'};
+    var command = {id: '1', title: 'the title'};
 
-    return handler(newTask).then(function () {
-      eventBus.broadcast.should.have.been.calledWith('taskAddedEvent', newTask);
+    return handler(command).then(function () {
+      eventBus.broadcast.should.have.been.calledWith('taskAddedEvent', command);
     });
   });
 });

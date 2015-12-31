@@ -1,6 +1,7 @@
 'use strict';
 
 require('chai').should();
+var sinon = require('sinon');
 var MemoryRepository = require('@arpinum/backend').MemoryRepository;
 var validateCurrentAuthenticationCommandHandler = require('./validateCurrentAuthenticationCommandHandler');
 var constants = require('../../test/constants');
@@ -9,10 +10,12 @@ var FunctionalError = require('@arpinum/backend').FunctionalError;
 describe('The validate current authentication command handler', function () {
   var handler;
   var userRepository;
+  var eventBus;
 
   beforeEach(function () {
     userRepository = new MemoryRepository();
-    handler = validateCurrentAuthenticationCommandHandler({user: userRepository});
+    eventBus = {broadcast: sinon.stub()};
+    handler = validateCurrentAuthenticationCommandHandler({user: userRepository}, {event: eventBus});
   });
 
   it('should validate successfully an authentication based on existing user', function () {
@@ -35,5 +38,15 @@ describe('The validate current authentication command handler', function () {
     var promise = handler(constants.DECODED_JWT_TOKEN);
 
     return promise.should.eventually.be.rejectedWith(FunctionalError, 'Invalid user');
+  });
+
+  it('should broadcast an event after the validation', function () {
+    userRepository.with({email: constants.EMAIL});
+
+    var promise = handler(constants.DECODED_JWT_TOKEN);
+
+    return promise.then(function () {
+      eventBus.broadcast.should.have.been.calledWith('authenticationValidated', {email: constants.EMAIL});
+    });
   });
 });

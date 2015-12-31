@@ -1,7 +1,9 @@
 'use strict';
 
-module.exports = function (repositories) {
-  return function (task) {
-    return repositories.task.update(task);
+module.exports = function (repositories, buses) {
+  return function (command) {
+    return repositories.task.update(command).then(function () {
+      buses.event.broadcast('taskPartiallyUpdatedEvent', command);
+    });
   };
 };

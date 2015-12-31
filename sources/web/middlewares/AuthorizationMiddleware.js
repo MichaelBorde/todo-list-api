@@ -9,8 +9,7 @@ function AuthorizationMiddleware() {
     '/authentications',
     '/authentications/validations',
     '/authentications/current',
-    '/users',
-    '/users/validations'
+    '/users'
   ];
 
   function configure(application) {
