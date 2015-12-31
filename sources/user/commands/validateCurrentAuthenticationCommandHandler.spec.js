@@ -8,15 +8,15 @@ var FunctionalError = require('@arpinum/backend').FunctionalError;
 
 describe('The validate current authentication command handler', function () {
   var handler;
-  var accountRepository;
+  var userRepository;
 
   beforeEach(function () {
-    accountRepository = new MemoryRepository();
-    handler = validateCurrentAuthenticationCommandHandler({account: accountRepository});
+    userRepository = new MemoryRepository();
+    handler = validateCurrentAuthenticationCommandHandler({user: userRepository});
   });
 
-  it('should validate successfully an authentication based on existing account', function () {
-    accountRepository.with({email: constants.EMAIL});
+  it('should validate successfully an authentication based on existing user', function () {
+    userRepository.with({email: constants.EMAIL});
 
     var promise = handler(constants.DECODED_JWT_TOKEN);
 
@@ -24,16 +24,16 @@ describe('The validate current authentication command handler', function () {
   });
 
   it('should reject if token is invalid', function () {
-    accountRepository.with({email: constants.EMAIL});
+    userRepository.with({email: constants.EMAIL});
 
     var promise = handler({email: 'invalid'});
 
-    return promise.should.eventually.be.rejectedWith(FunctionalError, 'Invalid account');
+    return promise.should.eventually.be.rejectedWith(FunctionalError, 'Invalid user');
   });
 
-  it('should reject if account is unknown', function () {
+  it('should reject if user is unknown', function () {
     var promise = handler(constants.DECODED_JWT_TOKEN);
 
-    return promise.should.eventually.be.rejectedWith(FunctionalError, 'Invalid account');
+    return promise.should.eventually.be.rejectedWith(FunctionalError, 'Invalid user');
   });
 });

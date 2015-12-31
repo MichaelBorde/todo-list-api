@@ -5,16 +5,16 @@ var _ = require('lodash');
 var Bluebird = require('bluebird');
 var CommandBus = require('@arpinum/backend').CommandBus;
 var FakeResponse = require('@arpinum/backend').FakeResponse;
-var AuthenticationValidationsResource = require('./AuthenticationValidationsResource');
+var UserValidationsResource = require('./UserValidationsResource');
 var constants = require('../../test/constants');
 
-describe('The authentication validation resource', function () {
+describe('The validations resource', function () {
   var resource;
   var commandBus;
 
   beforeEach(function () {
     commandBus = new CommandBus();
-    resource = new AuthenticationValidationsResource({command: commandBus});
+    resource = new UserValidationsResource({command: commandBus});
   });
 
   context('during POST', function () {
@@ -23,8 +23,8 @@ describe('The authentication validation resource', function () {
         email: constants.EMAIL,
         password: constants.PASSWORD
       };
-      commandBus.register('validateauthenticationCommand', function (givenAccount) {
-        if (_.isEqual(count, givenAccount)) {
+      commandBus.register('validateUserCommand', function (givenUser) {
+        if (_.isEqual(count, givenUser)) {
           return Bluebird.resolve({valid: true});
         }
         return Bluebird.resolve();
@@ -39,26 +39,8 @@ describe('The authentication validation resource', function () {
       });
     });
 
-    it('should hide errors from validation', function () {
-      var count = {
-        email: constants.EMAIL,
-        password: constants.PASSWORD
-      };
-      commandBus.register('validateauthenticationCommand', function () {
-        return Bluebird.resolve({valid: false, errors: ['some error']});
-      });
-      var request = {
-        body: count
-      };
-      var response = new FakeResponse();
-
-      return resource.post(request, response).then(function () {
-        response.send.should.have.been.calledWith({valid: false});
-      });
-    });
-
-    it('should respond with errors if authentication is incomplete', function () {
-      commandBus.register('validateauthenticationCommand', function () {
+    it('should reject with erros if user is invalid', function () {
+      commandBus.register('validateUserCommand', function () {
         return Bluebird.resolve('should not be called');
       });
       var response = new FakeResponse();
@@ -70,7 +52,7 @@ describe('The authentication validation resource', function () {
         error.should.be.defined;
         error.code.should.equal(400);
         error.message.should.equal(
-          'Invalid authentication: ' +
+          'Invalid user: ' +
           'email is mandatory, ' +
           'password is mandatory');
       });

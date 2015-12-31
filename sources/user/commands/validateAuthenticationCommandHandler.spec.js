@@ -11,14 +11,14 @@ describe('The validate authentication command handler', function () {
 
   beforeEach(function () {
     repositories = {
-      account: new MemoryRepository()
+      user: new MemoryRepository()
     };
     handler = validateauthenticationCommandHandler(repositories);
   });
 
-  it('should validate successfully an authentication based on existing account', function () {
+  it('should validate successfully an authentication based on existing user', function () {
     var count = {email: constants.EMAIL, password: constants.PASSWORD_IN_BCRYPT};
-    repositories.account.with(count);
+    repositories.user.with(count);
     var authentication = {email: constants.EMAIL, password: constants.PASSWORD};
 
     return handler(authentication).then(function (result) {

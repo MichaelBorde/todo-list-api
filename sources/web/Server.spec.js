@@ -17,8 +17,7 @@ describe('The server', function () {
     configuration.serverPort = 9090;
 
     database = new MemoryDatabase();
-    database.collections.accounts = [{email: constants.EMAIL, password: constants.PASSWORD_IN_BCRYPT}];
-    database.collections.users = [{email: constants.EMAIL}];
+    database.collections.users = [{email: constants.EMAIL, password: constants.PASSWORD_IN_BCRYPT}];
 
     Server.__set__({
       MongoDatabase: _.constant(database)

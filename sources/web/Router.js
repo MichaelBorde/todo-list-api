@@ -9,12 +9,12 @@ function Router(resources) {
 
   function configure(application) {
     var router = new ExpressRouter();
-    route('/accounts', resources.accounts);
-    route('/accounts/validations', resources.accountValidations);
+    route('/users', resources.users);
+    route('/users/current', resources.currentUser);
+    route('/users/validations', resources.userValidations);
     route('/authentications', resources.authentications);
     route('/authentications/validations', resources.authenticationValidations);
     route('/authentications/current', resources.currentAuthentication);
-    route('/users/current', resources.currentUser);
     route('/tasks', resources.tasks);
     route('/tasks/:id', resources.task);
 

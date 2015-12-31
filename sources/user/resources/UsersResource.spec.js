@@ -7,30 +7,30 @@ var sinon = require('sinon');
 var rewire = require('rewire');
 var FakeResponse = require('@arpinum/backend').FakeResponse;
 var constants = require('../../test/constants');
-var AccountsResource = rewire('./AccountsResource');
+var UsersResource = rewire('./UsersResource');
 
-describe('The accounts resource', function () {
+describe('The users resource', function () {
   var resource;
   var commandBus;
 
   beforeEach(function () {
     commandBus = {broadcast: sinon.stub().returns(Bluebird.resolve())};
 
-    AccountsResource.__set__({
+    UsersResource.__set__({
       uuid: {create: _.constant('1337')}
     });
 
-    resource = new AccountsResource({command: commandBus});
+    resource = new UsersResource({command: commandBus});
   });
 
   context('during POST', function () {
     it('should broadcast on the command bus and resolve created data', function () {
-      var account = {
+      var user = {
         email: constants.EMAIL,
         password: constants.PASSWORD
       };
       var request = {
-        body: account
+        body: user
       };
       var response = new FakeResponse();
 
@@ -42,12 +42,12 @@ describe('The accounts resource', function () {
           email: constants.EMAIL,
           password: constants.PASSWORD
         };
-        commandBus.broadcast.should.have.been.calledWith('addAccountCommand', expectedCommand);
+        commandBus.broadcast.should.have.been.calledWith('addUserCommand', expectedCommand);
         response.send.should.have.been.calledWith({id: '1337'});
       });
     });
 
-    it('should reject with errors if account is invalid', function () {
+    it('should reject with errors if user is invalid', function () {
       var response = new FakeResponse();
       var request = {body: {}};
 
@@ -58,7 +58,7 @@ describe('The accounts resource', function () {
         error.should.be.defined;
         error.code.should.equal(400);
         error.message.should.equal(
-          'Invalid account: ' +
+          'Invalid user: ' +
           'email is mandatory, ' +
           'password is mandatory');
       });

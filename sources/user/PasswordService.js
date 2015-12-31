@@ -4,11 +4,11 @@ var Bluebird = require('bluebird');
 var bcrypt = Bluebird.promisifyAll(require('bcrypt'));
 
 function PasswordService() {
-  this.compareWithAccount = compareWithAccount;
+  this.compareWithUser = compareWithUser;
   this.encrypt = encrypt;
 
-  function compareWithAccount(encrypt, account) {
-    return bcrypt.compareAsync(encrypt, account.password);
+  function compareWithUser(encrypt, user) {
+    return bcrypt.compareAsync(encrypt, user.password);
   }
 
   function encrypt(plainText) {

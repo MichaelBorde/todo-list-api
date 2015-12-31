@@ -9,17 +9,17 @@ var constants = require('../../test/constants');
 
 describe('The authenticate command handler', function () {
   var handler;
-  var accountRepository;
+  var userRepository;
   var eventBus;
 
   beforeEach(function () {
-    accountRepository = new MemoryRepository();
+    userRepository = new MemoryRepository();
     eventBus = {broadcast: sinon.stub()};
-    handler = authenticateCommandHandler({account: accountRepository}, {event: eventBus});
+    handler = authenticateCommandHandler({user: userRepository}, {event: eventBus});
   });
 
   it('should succeed if email and password are valid', function () {
-    accountRepository.with({email: 'michael@mail.fr', password: constants.PASSWORD_IN_BCRYPT});
+    userRepository.with({email: 'michael@mail.fr', password: constants.PASSWORD_IN_BCRYPT});
 
     var promise = handler({email: constants.EMAIL, password: constants.PASSWORD});
 
@@ -27,7 +27,7 @@ describe('The authenticate command handler', function () {
   });
 
   it('should broadcast an event after the authentification', function () {
-    accountRepository.with({email: 'michael@mail.fr', password: constants.PASSWORD_IN_BCRYPT});
+    userRepository.with({email: 'michael@mail.fr', password: constants.PASSWORD_IN_BCRYPT});
     var command = {email: constants.EMAIL, password: constants.PASSWORD};
 
     var promise = handler(command);
@@ -37,7 +37,7 @@ describe('The authenticate command handler', function () {
     });
   });
 
-  it('should reject if account is unknown', function () {
+  it('should reject if user is unknown', function () {
     var promise = handler('unknown', constants.PASSWORD);
 
     return promise.should.be.rejectedWith(FunctionalError, 'Authentication failed');

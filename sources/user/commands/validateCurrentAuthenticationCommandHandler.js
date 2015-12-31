@@ -6,15 +6,15 @@ var FunctionalError = require('@arpinum/backend').FunctionalError;
 
 module.exports = function (repositories) {
   return function (authentication) {
-    return accounts()
+    return users()
       .then(function (results) {
         if (_.isEmpty(results)) {
-          return Bluebird.reject(new FunctionalError('Invalid account'));
+          return Bluebird.reject(new FunctionalError('Invalid user'));
         }
       });
 
-    function accounts() {
-      return repositories.account.findAll({email: authentication.email});
+    function users() {
+      return repositories.user.findAll({email: authentication.email});
     }
   };
 };

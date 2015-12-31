@@ -1,31 +1,28 @@
 'use strict';
 
-var _ = require('lodash');
 var BodyValidator = require('@arpinum/backend').BodyValidator;
-var uuid = require('@arpinum/backend').uuid;
 
-function AccountsResource(buses) {
+function UserValidationsResource(buses) {
   var self = this;
   self.post = post;
 
   function post(request, response) {
     return new BodyValidator().promiseIfBodyIsValid({
-      schema: accountSchema(),
+      schema: userSchema(),
       request: request,
       response: response,
-      errorMessage: 'Invalid account',
+      errorMessage: 'Invalid user',
       promise: validPost
     });
 
     function validPost(request, response) {
-      var accountCommand = _.merge({}, request.body, {id: uuid.create()});
-      var promise = buses.command.broadcast('addAccountCommand', accountCommand);
-      return promise.then(function () {
-        response.send({id: accountCommand.id});
+      var promise = buses.command.broadcast('validateUserCommand', request.body);
+      return promise.then(function (data) {
+        response.send(data);
       });
     }
 
-    function accountSchema() {
+    function userSchema() {
       return {
         type: 'object',
         properties: {
@@ -37,4 +34,4 @@ function AccountsResource(buses) {
   }
 }
 
-module.exports = AccountsResource;
+module.exports = UserValidationsResource;

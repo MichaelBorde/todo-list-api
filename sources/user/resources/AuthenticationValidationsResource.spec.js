@@ -5,32 +5,32 @@ var _ = require('lodash');
 var Bluebird = require('bluebird');
 var CommandBus = require('@arpinum/backend').CommandBus;
 var FakeResponse = require('@arpinum/backend').FakeResponse;
-var AccountValidationsResource = require('./AccountValidationsResource');
+var AuthenticationValidationsResource = require('./AuthenticationValidationsResource');
 var constants = require('../../test/constants');
 
-describe('The validations resource', function () {
+describe('The authentication validation resource', function () {
   var resource;
   var commandBus;
 
   beforeEach(function () {
     commandBus = new CommandBus();
-    resource = new AccountValidationsResource({command: commandBus});
+    resource = new AuthenticationValidationsResource({command: commandBus});
   });
 
   context('during POST', function () {
     it('should broadcast on the command bus and resolve created data', function () {
-      var count = {
+      var user = {
         email: constants.EMAIL,
         password: constants.PASSWORD
       };
-      commandBus.register('validateAccountCommand', function (givenAccount) {
-        if (_.isEqual(count, givenAccount)) {
+      commandBus.register('validateauthenticationCommand', function (givenUser) {
+        if (_.isEqual(user, givenUser)) {
           return Bluebird.resolve({valid: true});
         }
         return Bluebird.resolve();
       });
       var request = {
-        body: count
+        body: user
       };
       var response = new FakeResponse();
 
@@ -39,8 +39,26 @@ describe('The validations resource', function () {
       });
     });
 
-    it('should reject with erros if account is invalid', function () {
-      commandBus.register('validateAccountCommand', function () {
+    it('should hide errors from validation', function () {
+      var user = {
+        email: constants.EMAIL,
+        password: constants.PASSWORD
+      };
+      commandBus.register('validateauthenticationCommand', function () {
+        return Bluebird.resolve({valid: false, errors: ['some error']});
+      });
+      var request = {
+        body: user
+      };
+      var response = new FakeResponse();
+
+      return resource.post(request, response).then(function () {
+        response.send.should.have.been.calledWith({valid: false});
+      });
+    });
+
+    it('should respond with errors if authentication is incomplete', function () {
+      commandBus.register('validateauthenticationCommand', function () {
         return Bluebird.resolve('should not be called');
       });
       var response = new FakeResponse();
@@ -52,7 +70,7 @@ describe('The validations resource', function () {
         error.should.be.defined;
         error.code.should.equal(400);
         error.message.should.equal(
-          'Invalid account: ' +
+          'Invalid authentication: ' +
           'email is mandatory, ' +
           'password is mandatory');
       });

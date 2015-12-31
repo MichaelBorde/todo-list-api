@@ -30,8 +30,8 @@ function AuthenticationsResource(buses) {
       });
     }
 
-    function createJwtToken(account) {
-      return tokenService().create(account);
+    function createJwtToken(user) {
+      return tokenService().create(user);
     }
 
     function tokenService() {
