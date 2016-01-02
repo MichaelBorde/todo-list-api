@@ -108,7 +108,7 @@ function Server() {
     }
 
     function initializeEvents() {
-      return new EventHandlerInitializer(repositories, buses.event, initializerOptions()).initialize();
+      return new EventHandlerInitializer(repositories, buses, initializerOptions()).initialize();
     }
 
     function initializeCommands() {
@@ -117,7 +117,7 @@ function Server() {
 
     function initializeQueries() {
       var queryProcessor = new QueryProcessor(database);
-      return new QueryHandlerInitializer(queryProcessor, buses.query, initializerOptions()).initialize();
+      return new QueryHandlerInitializer(queryProcessor, buses, initializerOptions()).initialize();
     }
 
     function initializerOptions() {
