@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var UnhandledErrorMiddleware = require('@arpinum/backend').UnhandledErrorMiddleware;
 var EventBus = require('@arpinum/backend').EventBus;
+var EventStore = require('@arpinum/backend').EventStore;
 var CommandBus = require('@arpinum/backend').CommandBus;
 var QueryBus = require('@arpinum/backend').QueryBus;
 var MongoDatabase = require('@arpinum/backend').MongoDatabase;
@@ -108,6 +109,7 @@ function Server() {
     }
 
     function initializeEvents() {
+      new EventStore(database, {log: log}).catchEvents(buses.event);
       return new EventHandlerInitializer(repositories, buses, initializerOptions()).initialize();
     }
 
