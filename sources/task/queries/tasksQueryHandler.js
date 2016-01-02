@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function (queryProcessor) {
-  return function (criteria) {
-    return queryProcessor.findAll('tasks', criteria);
+  return function (query) {
+    return queryProcessor.findAll('tasks', query);
   };
 };
