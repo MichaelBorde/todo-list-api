@@ -40,7 +40,8 @@ describe('The task resource', function () {
       var response = new FakeResponse();
 
       return resource.patch(request, response).then(function () {
-        commandBus.broadcast.should.have.been.calledWith('updateTaskPartiallyCommand', {id: '1', text: 'a task'});
+        var command = {criteria: {id: '1'}, update: {text: 'a task'}};
+        commandBus.broadcast.should.have.been.calledWith('updateTaskPartiallyCommand', command);
         response.end.should.have.been.called;
       });
     });

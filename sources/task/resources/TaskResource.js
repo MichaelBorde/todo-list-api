@@ -1,7 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
-
 function TaskResource(buses) {
   var self = this;
   self.get = get;
@@ -17,7 +15,7 @@ function TaskResource(buses) {
   }
 
   function patch(request, response) {
-    var command = _.merge({id: id(request)}, request.body);
+    var command = {criteria: {id: id(request)}, update: request.body};
     var promise = buses.command.broadcast('updateTaskPartiallyCommand', command);
     return promise.then(function () {
       response.end();

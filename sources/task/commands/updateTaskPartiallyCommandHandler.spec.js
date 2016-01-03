@@ -18,7 +18,7 @@ describe('The update task partially command handler', function () {
 
   it('should update the task via the repository', function () {
     taskRespository.with({id: '1', title: 'the title', otherField: 'other value'});
-    var command = {id: '1', title: 'the new title'};
+    var command = {criteria: {id: '1'}, update: {title: 'the new title'}};
 
     return handler(command).then(function () {
       taskRespository.all().should.deep.equal([{
@@ -30,7 +30,7 @@ describe('The update task partially command handler', function () {
   });
 
   it('should broadcast an event after the update', function () {
-    var command = {id: '1', title: 'the new title'};
+    var command = {criteria: {id: '1'}, update: {title: 'the new title'}};
 
     return handler(command).then(function () {
       eventBus.broadcast.should.have.been.calledWith('taskPartiallyUpdatedEvent', command);
