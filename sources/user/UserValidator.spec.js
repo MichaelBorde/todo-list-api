@@ -1,6 +1,7 @@
 'use strict';
 
-var MemoryRepository = require('@arpinum/backend').MemoryRepository;
+var repositoryInMemory = require('@arpinum/backend').repositoryInMemory;
+var UserRepository = require('./UserRepository');
 var UserValidator = require('./UserValidator');
 
 describe('The user validator', function () {
@@ -8,9 +9,7 @@ describe('The user validator', function () {
   var validator;
 
   beforeEach(function () {
-    repositories = {
-      user: new MemoryRepository()
-    };
+    repositories = {user: repositoryInMemory(UserRepository)};
     validator = new UserValidator(repositories);
   });
 

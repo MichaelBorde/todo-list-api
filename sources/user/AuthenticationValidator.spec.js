@@ -1,18 +1,18 @@
 'use strict';
 
 var should = require('chai').should();
-var MemoryRepository = require('@arpinum/backend').MemoryRepository;
+var repositoryInMemory = require('@arpinum/backend').repositoryInMemory;
+var UserRepository = require('./UserRepository');
 var AuthenticationValidator = require('./AuthenticationValidator');
 var constants = require('../test/constants');
 
 describe('The authentication validator', function () {
+
   var validator;
   var repositories;
 
   beforeEach(function () {
-    repositories = {
-      user: new MemoryRepository()
-    };
+    repositories = {user: repositoryInMemory(UserRepository)};
     validator = new AuthenticationValidator(repositories);
   });
 

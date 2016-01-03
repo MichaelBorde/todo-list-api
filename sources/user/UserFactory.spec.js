@@ -1,7 +1,8 @@
 'use strict';
 
 var should = require('chai').should();
-var MemoryRepository = require('@arpinum/backend').MemoryRepository;
+var repositoryInMemory = require('@arpinum/backend').repositoryInMemory;
+var UserRepository = require('./UserRepository');
 var UserFactory = require('./UserFactory');
 var constants = require('../test/constants');
 
@@ -10,9 +11,7 @@ describe('The user factory', function () {
   var factory;
 
   beforeEach(function () {
-    repositories = {
-      user: new MemoryRepository()
-    };
+    repositories = {user: repositoryInMemory(UserRepository)};
     factory = new UserFactory(repositories);
   });
 

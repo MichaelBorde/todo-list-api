@@ -2,7 +2,8 @@
 
 require('chai').should();
 var sinon = require('sinon');
-var MemoryRepository = require('@arpinum/backend').MemoryRepository;
+var repositoryInMemory = require('@arpinum/backend').repositoryInMemory;
+var UserRepository = require('../UserRepository');
 var validateCurrentAuthenticationCommandHandler = require('./validateCurrentAuthenticationCommandHandler');
 var constants = require('../../test/constants');
 var FunctionalError = require('@arpinum/backend').FunctionalError;
@@ -13,7 +14,7 @@ describe('The validate current authentication command handler', function () {
   var eventBus;
 
   beforeEach(function () {
-    userRepository = new MemoryRepository();
+    userRepository = repositoryInMemory(UserRepository);
     eventBus = {broadcast: sinon.stub()};
     handler = validateCurrentAuthenticationCommandHandler({user: userRepository}, {event: eventBus});
   });

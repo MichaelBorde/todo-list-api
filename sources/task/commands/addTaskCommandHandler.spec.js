@@ -2,7 +2,8 @@
 
 require('chai').should();
 var sinon = require('sinon');
-var MemoryRepository = require('@arpinum/backend').MemoryRepository;
+var repositoryInMemory = require('@arpinum/backend').repositoryInMemory;
+var TaskRepository = require('../TaskRepository');
 var addTaskCommandHandler = require('./addTaskCommandHandler');
 
 describe('The add task command handler', function () {
@@ -11,7 +12,7 @@ describe('The add task command handler', function () {
   var eventBus;
 
   beforeEach(function () {
-    taskRepository = new MemoryRepository();
+    taskRepository = repositoryInMemory(TaskRepository);
     eventBus = {broadcast: sinon.stub()};
     handler = addTaskCommandHandler({task: taskRepository}, {event: eventBus});
   });

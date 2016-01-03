@@ -2,26 +2,27 @@
 
 require('chai').should();
 var sinon = require('sinon');
-var MemoryRepository = require('@arpinum/backend').MemoryRepository;
+var repositoryInMemory = require('@arpinum/backend').repositoryInMemory;
+var TaskRepository = require('../TaskRepository');
 var updateTaskPartiallyCommandHandler = require('./updateTaskPartiallyCommandHandler');
 
 describe('The update task partially command handler', function () {
   var handler;
-  var taskRespository;
+  var taskRepository;
   var eventBus;
 
   beforeEach(function () {
-    taskRespository = new MemoryRepository();
+    taskRepository = repositoryInMemory(TaskRepository);
     eventBus = {broadcast: sinon.stub()};
-    handler = updateTaskPartiallyCommandHandler({task: taskRespository}, {event: eventBus});
+    handler = updateTaskPartiallyCommandHandler({task: taskRepository}, {event: eventBus});
   });
 
   it('should update the task via the repository', function () {
-    taskRespository.with({id: '1', title: 'the title', otherField: 'other value'});
+    taskRepository.with({id: '1', title: 'the title', otherField: 'other value'});
     var command = {criteria: {id: '1'}, update: {title: 'the new title'}};
 
     return handler(command).then(function () {
-      taskRespository.all().should.deep.equal([{
+      taskRepository.all().should.deep.equal([{
         id: '1',
         title: 'the new title',
         otherField: 'other value'

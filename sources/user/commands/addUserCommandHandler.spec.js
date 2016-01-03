@@ -3,7 +3,8 @@
 require('chai').use(require('sinon-chai')).use(require('chai-as-promised')).should();
 var sinon = require('sinon');
 var ConflictingEntityError = require('@arpinum/backend').ConflictingEntityError;
-var MemoryRepository = require('@arpinum/backend').MemoryRepository;
+var repositoryInMemory = require('@arpinum/backend').repositoryInMemory;
+var UserRepository = require('../UserRepository');
 var addUserCommandHandler = require('./addUserCommandHandler');
 var constants = require('../../test/constants');
 
@@ -13,7 +14,7 @@ describe('The add user command handler', function () {
   var eventBus;
 
   beforeEach(function () {
-    repositories = {user: new MemoryRepository()};
+    repositories = {user: repositoryInMemory(UserRepository)};
     eventBus = {broadcast: sinon.stub()};
     handler = addUserCommandHandler(repositories, {event: eventBus});
   });
