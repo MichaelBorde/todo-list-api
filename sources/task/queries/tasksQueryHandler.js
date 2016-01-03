@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = function (queryProcessor) {
+module.exports = function (projections) {
   return function (query) {
-    return queryProcessor.findAll('tasks', query);
+    return projections.task.findAll(query);
   };
 };

@@ -18,6 +18,7 @@ describe('The server', function () {
 
     database = new MemoryDatabase();
     database.collections.users = [{email: constants.EMAIL, password: constants.PASSWORD_IN_BCRYPT}];
+    database.collections['users.projection'] = [{email: constants.EMAIL}];
 
     Server.__set__({
       MongoDatabase: _.constant(database)

@@ -1,13 +1,15 @@
 'use strict';
 
-var _ = require('lodash');
+var QueriedObjectNotFoundError = require('@arpinum/backend').QueriedObjectNotFoundError;
 
-module.exports = function taskQuery(queryProcessor) {
+module.exports = function (projections) {
   return function (query) {
-    return queryProcessor.findFirst('users', query)
-      .then(function (user) {
-        return _.omit(user, 'password');
-      });
+    return projections.user.findFirst(query).then(function (user) {
+      if (!user) {
+        throw new QueriedObjectNotFoundError(query);
+      }
+      return user;
+    });
   };
 };
 

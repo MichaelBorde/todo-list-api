@@ -11,11 +11,11 @@ var EventStore = require('@arpinum/backend').EventStore;
 var CommandBus = require('@arpinum/backend').CommandBus;
 var QueryBus = require('@arpinum/backend').QueryBus;
 var MongoDatabase = require('@arpinum/backend').MongoDatabase;
-var QueryProcessor = require('@arpinum/backend').QueryProcessor;
 var RepositoryInitializer = require('@arpinum/backend').RepositoryInitializer;
 var CommandHandlerInitializer = require('@arpinum/backend').CommandHandlerInitializer;
 var QueryHandlerInitializer = require('@arpinum/backend').QueryHandlerInitializer;
 var EventHandlerInitializer = require('@arpinum/backend').EventHandlerInitializer;
+var ProjectionInitializer = require('@arpinum/backend').ProjectionInitializer;
 var ResourceInitializer = require('@arpinum/backend').ResourceInitializer;
 var Router = require('./Router');
 var configuration = require('../configuration');
@@ -50,12 +50,14 @@ function Server() {
     var database;
     var resources;
     var repositories;
+    var projections;
 
     return initializeDatabase()
       .then(initializeResources)
       .then(initializeRouting)
       .then(initializeRepositories)
       .then(initializeEvents)
+      .then(initializeProjections)
       .then(initializeCommands)
       .then(initializeQueries);
 
@@ -113,13 +115,19 @@ function Server() {
       return new EventHandlerInitializer(repositories, buses, initializerOptions()).initialize();
     }
 
+    function initializeProjections() {
+      var initialize = new ProjectionInitializer(database, buses, initializerOptions()).initialize();
+      return initialize.then(function (p) {
+        projections = p;
+      });
+    }
+
     function initializeCommands() {
       return new CommandHandlerInitializer(repositories, buses, initializerOptions()).initialize();
     }
 
     function initializeQueries() {
-      var queryProcessor = new QueryProcessor(database);
-      return new QueryHandlerInitializer(queryProcessor, buses, initializerOptions()).initialize();
+      return new QueryHandlerInitializer(projections, buses, initializerOptions()).initialize();
     }
 
     function initializerOptions() {

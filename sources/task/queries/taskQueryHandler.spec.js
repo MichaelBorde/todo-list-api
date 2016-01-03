@@ -1,20 +1,23 @@
 'use strict';
 
 require('chai').should();
-var MemoryQueryProcessor = require('@arpinum/backend').MemoryQueryProcessor;
+var MemoryDatabase = require('@arpinum/backend').MemoryDatabase;
+var QueriedObjectNotFoundError = require('@arpinum/backend').QueriedObjectNotFoundError;
+var TaskProjection = require('../projections/TaskProjection');
 var taskQueryHandler = require('./taskQueryHandler');
 
 describe('The task query handler', function () {
+
   var handler;
-  var queryProcessor;
+  var database;
 
   beforeEach(function () {
-    queryProcessor = new MemoryQueryProcessor();
-    handler = taskQueryHandler(queryProcessor);
+    database = new MemoryDatabase();
+    handler = taskQueryHandler({task: new TaskProjection(database)});
   });
 
   it('should find a task based on criteria', function () {
-    queryProcessor.collections.tasks = [
+    database.collections['tasks.projection'] = [
       {id: 1, text: 'first task'},
       {id: 2, text: 'second task'}
     ];
@@ -22,5 +25,13 @@ describe('The task query handler', function () {
     var promise = handler({id: 2});
 
     return promise.should.eventually.deep.equal({id: 2, text: 'second task'});
+  });
+
+  it('should reject if cannot find any task', function () {
+    database.collections['tasks.projection'] = [];
+
+    var promise = handler({name: 'document'});
+
+    return promise.should.be.rejectedWith(QueriedObjectNotFoundError);
   });
 });

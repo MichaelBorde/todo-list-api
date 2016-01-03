@@ -1,20 +1,23 @@
 'use strict';
 
 require('chai').should();
-var MemoryQueryProcessor = require('@arpinum/backend').MemoryQueryProcessor;
+var MemoryDatabase = require('@arpinum/backend').MemoryDatabase;
+var QueriedObjectNotFoundError = require('@arpinum/backend').QueriedObjectNotFoundError;
+var UserProjection = require('../projections/UserProjection');
 var userQueryHandler = require('./userQueryHandler');
 
 describe('The user query handler', function () {
+
   var handler;
-  var queryProcessor;
+  var database;
 
   beforeEach(function () {
-    queryProcessor = new MemoryQueryProcessor();
-    handler = userQueryHandler(queryProcessor);
+    database = new MemoryDatabase();
+    handler = userQueryHandler({user: new UserProjection(database)});
   });
 
   it('should find a user', function () {
-    queryProcessor.collections.users = [
+    database.collections['users.projection'] = [
       {id: '1', name: 'a user'},
       {id: '2', name: 'another user'}
     ];
@@ -24,15 +27,11 @@ describe('The user query handler', function () {
     return promise.should.eventually.deep.equal({id: '2', name: 'another user'});
   });
 
-  it('should never return the password', function () {
-    queryProcessor.collections.users = [{
-      id: '1',
-      name: 'a user',
-      password: 'bleh'
-    }];
+  it('should reject if cannot find any user', function () {
+    database.collections['users.projection'] = [];
 
-    var promise = handler({id: '1'});
+    var promise = handler({name: 'a user'});
 
-    return promise.should.eventually.deep.equal({id: '1', name: 'a user'});
+    return promise.should.be.rejectedWith(QueriedObjectNotFoundError);
   });
 });

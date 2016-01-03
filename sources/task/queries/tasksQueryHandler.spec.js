@@ -1,16 +1,18 @@
 'use strict';
 
 require('chai').should();
-var MemoryQueryProcessor = require('@arpinum/backend').MemoryQueryProcessor;
+var MemoryDatabase = require('@arpinum/backend').MemoryDatabase;
+var TaskProjection = require('../projections/TaskProjection');
 var tasksQueryHandler = require('./tasksQueryHandler');
 
 describe('The tasks query handler', function () {
+
   var handler;
-  var queryProcessor;
+  var database;
 
   beforeEach(function () {
-    queryProcessor = new MemoryQueryProcessor();
-    handler = tasksQueryHandler(queryProcessor);
+    database = new MemoryDatabase();
+    handler = tasksQueryHandler({task: new TaskProjection(database)});
   });
 
   it('should find tasks based on criteria', function () {
@@ -19,7 +21,7 @@ describe('The tasks query handler', function () {
       {id: 2, text: 'another text'},
       {id: 3, text: 'text'}
     ];
-    queryProcessor.collections.tasks = tasks;
+    database.collections['tasks.projection'] = tasks;
 
     var promise = handler({text: 'text'});
 
