@@ -32,8 +32,6 @@ function Server() {
   var expressServer;
 
   self.start = start;
-  self.stop = stop;
-  self.root = root;
 
   function start() {
     return initialize().then(startServer);
@@ -141,17 +139,7 @@ function Server() {
   function startServer() {
     return new Bluebird(function (resolve) {
       expressServer = app.listen(configuration.serverPort, function () {
-        log.info('Server started at', self.root());
-        resolve();
-      });
-    });
-  }
-
-  function stop() {
-    return new Bluebird(function (resolve) {
-      var serverRoot = self.root();
-      expressServer.close(function () {
-        log.info('Server stopped at', serverRoot);
+        log.info('Server started at', root());
         resolve();
       });
     });

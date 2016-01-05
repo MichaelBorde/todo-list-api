@@ -27,7 +27,6 @@
     "morgan": "^1.6.1",
     "schema-inspector": "^1.6.3",
     "underscore.string": "^3.2.2",
-    "unorm": "^1.4.1",
     "winston": "^2.1.1"
   },
   "devDependencies": {
