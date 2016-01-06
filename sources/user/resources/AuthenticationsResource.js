@@ -42,11 +42,11 @@ function AuthenticationsResource(buses) {
     }
 
     function optionsCookieDepuis(authentication) {
-      return _.merge({
-          httpOnly: true,
-          secure: configuration.securedCookie
-        },
-        optionExpiration(authentication));
+      var options = {
+        httpOnly: true,
+        secure: configuration.securedCookie
+      };
+      return _.merge(options, optionExpiration(authentication));
     }
 
     function optionExpiration(authentication) {
