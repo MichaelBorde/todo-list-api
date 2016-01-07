@@ -1,6 +1,6 @@
 'use strict';
 
-var PasswordService = require('./PasswordService');
+var PasswordService = require('@arpinum/backend').PasswordService;
 
 function UserFactory(repositories) {
   this.create = create;

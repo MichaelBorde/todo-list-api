@@ -4,7 +4,7 @@ var should = require('chai').should();
 var repositoryInMemory = require('@arpinum/backend').repositoryInMemory;
 var UserRepository = require('./UserRepository');
 var UserFactory = require('./UserFactory');
-var constants = require('../test/constants');
+var PasswordService = require('@arpinum/backend').PasswordService;
 
 describe('The user factory', function () {
   var repositories;
@@ -19,7 +19,7 @@ describe('The user factory', function () {
     var count = userToCreate();
 
     return factory.create(count).then(function (createdUser) {
-      createdUser.password.should.match(constants.BCRYPT_REGEX);
+      new PasswordService().encrypted(createdUser.password).should.be.true;
     });
   });
 
@@ -51,4 +51,5 @@ describe('The user factory', function () {
       password: 'password'
     };
   }
-});
+})
+;
